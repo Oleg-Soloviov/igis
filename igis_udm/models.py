@@ -26,7 +26,7 @@ class Hospital(models.Model):
     igis_obj = models.SmallIntegerField(unique=True)
     place = models.ForeignKey(Place, verbose_name='населенный пункт', on_delete=models.CASCADE,)
     phone = models.CharField('телефон', max_length=100, null=True, blank=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, max_length=255)
     address = models.CharField('адрес', max_length=255, null=True, blank=True)
     site_url = models.URLField(max_length=255, null=True, blank=True)
     x_coord = models.CharField(max_length=24, null=True, blank=True)
