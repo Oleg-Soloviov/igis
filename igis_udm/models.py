@@ -105,7 +105,7 @@ class FreeDay(models.Model):
 
 class Person(models.Model):
     igis_fio = models.CharField(max_length=255)
-    igis_url = models.URLField()
+    igis_url = models.URLField(max_length=255)
     igis_person_id = models.CharField(max_length=255, blank=True, null=True)
     igis_update_date = models.DateTimeField(blank=True, null=True)
     family = models.CharField(max_length=255, blank=True, null=True)
@@ -115,7 +115,7 @@ class Person(models.Model):
     room = models.CharField(max_length=255, blank=True, null=True)
     time_limit = models.CharField(max_length=255, blank=True, null=True)
     kod = models.CharField(max_length=255, blank=True, null=True)
-    sector = models.CharField(max_length=255, blank=True, null=True)
+    sector = models.CharField(max_length=512, blank=True, null=True)
     time_filter = models.CharField(max_length=255, blank=True, null=True)
     unit = models.CharField(max_length=255, blank=True, null=True)
     info = models.CharField(max_length=255, blank=True, null=True)
