@@ -1,0 +1,74 @@
+{% extends "igis_udm/base.html" %}
+
+{% block title %}Удмуртия. {{ place.name }}. Запись на прием к врачу через интернет.{% endblock title %}
+
+{% block header_custom_css %}
+{% endblock %}
+
+{% block page_container %}
+  <div class="w3-row-padding">
+
+    <!-- Left Column -->
+    <div class="w3-third">
+{% block left_column %}
+        <div class="w3-white w3-text-grey w3-card-4 w3-margin-bottom">
+            <div class="w3-container">
+                <h4>{{ place.name }}</h4>
+            </div>
+            <button onclick="toggle_class('cities_list','w3-hide')" class="w3-button w3-block w3-left-align w3-teal">Выбрать город или район</button>
+            <div id="cities_list" class="w3-container w3-hide">
+                <form class="w3-margin-bottom">
+                    <p>
+                        <label class="w3-text-grey">Фильтр по названию</label>
+                        <input oninput="filterHTML('places_list', 'my_city', 'search_item', this.value)" class="w3-input w3-border" type="text">
+                    </p>
+                </form>
+                <ul id="places_list" class="w3-ul">
+                    {% for place in place_list %}
+                    <li class="my_city"><a class="search_item" href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        {% if  place.hospital_set.all|length > 3 %}
+        <div class="w3-container w3-teal">
+            <h5>Фильтр</h5>
+        </div>
+
+        <form class="w3-container w3-card-4 w3-margin-bottom">
+            <p>
+                <label class="w3-text-grey">Название или адрес больницы</label>
+                <input oninput="w3.filterHTML('#hospital_list', '.my_item', this.value)" class="w3-input w3-border" type="text">
+            </p>
+        </form>
+        {% endif %}
+
+{% endblock left_column %}
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div id="hospital_list" class="w3-twothird">
+{% block right_column %}
+      {% for hospital in place.hospital_set.all %}
+      <div class="w3-container w3-card-2 w3-white w3-margin-bottom  my_item">
+          <div class="w3-container">
+            <h5 class="w3-text-dark-grey my_hospital_name"><a href="{{ hospital.get_absolute_url }}">{{ hospital.name }}</a></h5>
+            {% if hospital.phone %}<h6 class="w3-text-teal">&#9742; {{ hospital.phone }}</h6>{% endif %}
+            <p class="w3-text-dark-grey">{{ hospital.address }}</p>
+          </div>
+      </div>
+      {% endfor %}
+{% endblock right_column %}
+    <!-- End Right Column -->
+    </div>
+
+{% endblock page_container %}
+  </div>
+
+{% block bottom_custom_js %}
+<script>
+{% include  'igis_udm/my_utils.js' %}
+</script>
+{% endblock %}

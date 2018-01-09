@@ -1,0 +1,142 @@
+{% extends "igis_udm/base.html" %}
+
+{% block header_custom_css %}
+<style>{% include 'igis_udm/modal_img_hospital_detail.css' %}</style>
+{% endblock %}
+{% block header_custom_js %}
+{% endblock %}
+
+{% block page_container %}
+<div class="w3-row-padding">
+    <!-- Left Column -->
+    <div class="w3-third">
+        {% block left_column %}
+        <div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container">
+            <h6 class="w3-text-grey w3-padding-small"><a href="{{ hospital.place.get_absolute_url }}">{{ hospital.place.name }}</a></h6>
+            <h5 class="w3-text-grey w3-padding-small">{{ hospital.name }}</h5>
+            <button class="w3-button w3-block w3-teal w3-margin-bottom w3-left-align w3-round" onclick="w3.toggleClass('#hospital_info', 'w3-hide')">Детали <span class="w3-hide-small">(адрес, телефон, сайт)</span></button>
+            <div id="hospital_info" class="w3-container w3-hide">
+                <div class="w3-row">
+                    <div class="w3-third w3-center w3-border-right w3-border-left">
+                        <img id="myImg" width="200" src="{{ hospital.image.url }}" class="w3-image" title="{{ hospital.name }}" alt="{{ hospital.name }}">
+                        <br>
+                        <!-- The Modal -->
+                        <div id="myModal" class="modal">
+                            <!-- The Close Button -->
+                            <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                            <!-- Modal Content (The Image) -->
+                            <img class="modal-content" id="img01">
+                        </div>
+                    </div>
+                    <div class="w3-twothird w3-padding">
+                        <p>{{ hospital.address }}</p>
+                        <p>{{ hospital.phone }}</p>
+                        <p><a href="{{ hospital.site_url }}" target="_blank">{{ hospital.site_url }}</a></p>
+                        <p>{{ hospital.email }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="w3-container w3-card-2 w3-white w3-margin-bottom">
+            <div>
+                <form class="w3-margin-bottom" method="post" name="login">{% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <p>
+                        {{ form.name.errors }}
+                        <label class="w3-text-grey">Фамилия</label>
+                        <input class="w3-input w3-border" name="ul" placeholder="иванов (только фамилия)">
+                    </p>
+                    <p>
+                        {{ form.polis.errors }}
+                        <label class="w3-text-grey">Номер полиса</label>
+                        <input class="w3-input w3-border" name="up" placeholder="1111 2222 3333 4444 (только цифры)">
+                    </p>
+                    <p>
+                        <button class="w3-button w3-block w3-teal w3-round">Авторизация</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="w3-container w3-card-2 w3-white">
+            <p>
+                <button onclick="w3.toggleClass('#cities_list','w3-hide')" class="w3-button w3-block w3-left-align w3-teal w3-round">Выбрать город или район</button>
+            </p>
+            <div id="cities_list" class="w3-container w3-hide">
+                <form class="w3-margin-bottom">
+                    <p>
+                        <label class="w3-text-grey">Фильтр по названию</label>
+                        <input oninput="w3.filterHTML('#places_list', '.my_city', this.value)" class="w3-input w3-border">
+                    </p>
+                </form>
+                <ul id="places_list" class="w3-ul">
+                    {% for place in place_list %}
+                    <li class="my_city"><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endblock left_column %}
+        <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="w3-twothird">
+        {% block right_column %}
+        <div class="w3-white w3-text-grey w3-card-4">
+            <div class="w3-container">
+                <div class="w3-row">
+                    <div class="w3-half">
+                        <form>
+                            <p>
+                                <label class="w3-text-grey">Фильтр по фамилии или специальности</label>
+                                <input oninput="w3.filterHTML('#person_table', '.person_item', this.value)" class="w3-input w3-border">
+                            </p>
+                        </form>
+                    </div>
+                </div>
+                <div class="">
+                    <table id="person_table" class="w3-table-all">
+                        <tr>
+                            <th onclick="w3.sortHTML('#person_table','.person_item', 'td:nth-child(1)>a')" style="cursor:pointer">Ф.И.О.&nbsp;#&8645;</i></th>
+                            <th onclick="w3.sortHTML('#person_table','.person_item', 'td:nth-child(2)')" style="cursor:pointer">Спец-ть&nbsp;#&8645;</th>
+                            <th class="w3-hide-small">Информация</th>
+                        </tr>
+                        {% for person in person_list %}
+                        <tr class="person_item">
+                            <td><a onclick="document.getElementById('modal_container').style.display='block'" data-person-data-1="{{ person.data_1 }}" data-person-data-2="{{ person.data_2 }}" href="#">{{ person.fio|upper }}</a></td>
+                            <td>{{ person.speciality }}</td>
+                            <td class="w3-hide-small">{{ person.info }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    {% endblock right_column %}
+    <!-- End Right Column -->
+</div>
+<div id="modal_container" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-zoom">
+        <header class="w3-container w3-teal">
+            <span onclick="document.getElementById('modal_container').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <h2>Modal Header</h2>
+        </header>
+        <div class="w3-container">
+            <p>Some text..</p>
+            <p>Some text..</p>
+        </div>
+        <footer class="w3-container w3-teal">
+            <p>Modal Footer</p>
+        </footer>
+    </div>
+</div>
+{% endblock page_container %}
+
+{% block bottom_custom_js %}
+<script>
+{% include  'igis_udm/modal_img_hospital_detail.js' %}
+</script>
+{% endblock %}

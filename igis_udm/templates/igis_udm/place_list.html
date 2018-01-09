@@ -1,0 +1,37 @@
+{% extends "igis_udm/base.html" %}
+
+{% block page_container %}
+<div class="w3-row-padding">
+    <div class="w3-panel w3-white w3-text-teal w3-card w3-round">
+        <h1>Выберите город или район где Вы хотите записаться на прием.</h1>
+    </div>
+    <div class="w3-third">
+        <div class="w3-white w3-text-grey w3-card-4">
+            <ul class="w3-ul">
+                {% for place in page_obj_1 %}
+                <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="w3-third">
+        <div class="w3-white w3-text-grey w3-card-4">
+            <ul class="w3-ul">
+                {% for place in page_obj_2 %}
+                   <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="w3-third">
+        <div class="w3-white w3-text-grey w3-card-4">
+            <ul class="w3-ul">
+                {% for place in page_obj_3 %}
+                   <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock page_container %}

@@ -1,0 +1,306 @@
+{% extends "igis_udm/base.html" %}
+
+{% block header_custom_css %}
+<style>
+{% include 'igis_udm/modal_img_hospital_detail.css' %}
+{% include 'igis_udm/my_css.css' %}
+</style>
+{% endblock %}
+{% block header_custom_js %}
+{% endblock %}
+
+{% block page_navigation %}
+<div class="w3-bar w3-teal">
+  <div class="w3-right w3-padding">
+    <span class="w3-bar-item">ФИО:</span>
+    <span id="patient_fio" class="w3-bar-item">{% if user %}{{ user.f }} {{ user.i }} {{ user.o }}{% else %}НЕ АВТОРИЗОВАН{% endif %}</span>
+    {% if user %}
+    <div id="patient_info" class="w3-dropdown-hover w3-bar-item">(инфо)
+        <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
+        <div class="w3-container">
+            <p id="uch_ther">Терапевтический участок: {{ user.uch }}</p>
+            <p id="uch_gin"{% if not user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ user.guch }}</p>
+        </div>
+        </div>
+    </div>
+    {% else %}
+    <div id="patient_info" class="w3-dropdown-hover w3-bar-item" style="display:none;">(инфо)
+        <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
+            <div class="w3-container">
+                <p id="uch_ther"></p>
+                <p id="uch_gin" style="display:none;"></p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <button id="login_button" class="w3-bar-item w3-button w3-theme-d1 w3-border ew3-border-red w3-round-large">{% if user %}Выйти{% else %}Авторизация{% endif %}</button>
+  </div>
+</div>
+{% endblock page_navigation %}
+
+{% block page_container %}
+<div class="w3-row-padding">
+    <!-- Left Column -->
+    <div class="w3-third">
+        {% block left_column %}
+        <div id="zapisi" class="w3-card-2 w3-white w3-margin-bottom">
+            <h3 class="w3-teal w3-container w3-padding-small">
+                Ваши записи
+            </h3>
+            {% if not sign_items %}
+            <div id="zapisi_net" class="w3-container">
+                <h4>У Вас нет активных записей</h4>
+            </div>
+            <div id="zapisi_items" class="w3-container" style="display:none;"></div>
+            {% else %}
+            <div id="zapisi_net" class="w3-container" style="display:none;">
+                <h4>У Вас нет активных записей</h4>
+            </div>
+            <div id="zapisi_items" class="w3-container">
+                {% for item in sign_items %}
+                <div class="w3-panel w3-border w3-light-grey w3-round-large">
+                    <div class="w3-row">
+                        <p class="">{{ item.sign_specialist_role }}</p>
+                    </div>
+                    <div class="w3-row">
+                        <p class="">{{ item.sign_specialist_name }}</p>
+                    </div>
+                    <div class="w3-cell-row">
+                        <div class="w3-cell">Дата и время записи</div>
+                        <div class="w3-cell">{{ item.sign_date }}</div>
+                        <div class="w3-cell">{{ item.sign_time }}</div>
+                    </div>
+                    <div class="w3-row w3-margin-top">
+                        <button class="w3-button w3-teal w3-margin-bottom w3-round w3-right" data-id="{{ item.id }}" data-date="{{ item.date }}" data-time="{{ item.time }}" onclick="sign_out(this)">Отменить</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container befor_auth">
+            <h6 class="w3-text-grey w3-padding-small"><a href="{{ hospital.place.get_absolute_url }}">{{ hospital.place.name }}</a></h6>
+            <h5 class="w3-text-grey w3-padding-small">{{ hospital.name }}</h5>
+            <button class="w3-button w3-block w3-teal w3-margin-bottom w3-left-align w3-round" onclick="toggle_class('hospital_info', 'w3-hide')">Детали <span class="w3-hide-small">(адрес, телефон, сайт)</span></button>
+            <div id="hospital_info" class="w3-container w3-hide">
+                <div class="w3-row">
+                    <div class="w3-third w3-center w3-border-right w3-border-left">
+                        <img id="myImg" width="200" src="{{ hospital.image.url }}" class="w3-image" title="{{ hospital.name }}" alt="{{ hospital.name }}">
+                        <br>
+                        <!-- The Modal -->
+                        <div id="myModal" class="modal">
+                            <!-- The Close Button -->
+                            <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                            <!-- Modal Content (The Image) -->
+                            <img class="modal-content" id="img01">
+                        </div>
+                    </div>
+                    <div class="w3-twothird w3-padding">
+                        <p>{{ hospital.address }}</p>
+                        <p>{{ hospital.phone }}</p>
+                        <p><a href="{{ hospital.site_url }}" target="_blank">{{ hospital.site_url }}</a></p>
+                        <p>{{ hospital.email }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="w3-container w3-card-2 w3-white befor_auth">
+            <p>
+                <button onclick="toggle_class('cities_list','w3-hide')" class="w3-button w3-block w3-left-align w3-teal w3-round">Выбрать город или район</button>
+            </p>
+            <div id="cities_list" class="w3-container w3-hide">
+                <form class="w3-margin-bottom">
+                    <p>
+                        <label class="w3-text-grey">Фильтр по названию</label>
+                        <input oninput="filterHTML('places_list', 'my_city', 'search_item', this.value)" class="w3-input w3-border">
+                    </p>
+                </form>
+                <ul id="places_list" class="w3-ul">
+                    {% for place in place_list %}
+                    <li class="my_city"><a class="search_item" href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container w3-hide after_auth">
+            <h1>after_auth</h1>
+        </div>
+        {% endblock left_column %}
+        <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    {% block right_column %}
+    <div class="w3-twothird">
+        <div class="w3-white w3-text-grey w3-card-4">
+            <div class="w3-container">
+                <div class="w3-row">
+                    <div class="w3-half">
+                        <form>
+                            <p class=" w3-padding">
+                                <input oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)" class="w3-input w3-border">
+                            </p>
+                        </form>
+                    </div>
+                    <div class="w3-half">
+                        <p class="w3-padding-16">
+                            <label class="w3-text-grey">Фильтр по фамилии или специальности</label>
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div class="w3-row w3-padding w3-teal">
+                        <div class="w3-third" onclick="sortHTML('person_list', '.person_item', '.person_fio')" style="cursor:pointer">
+                            Ф.И.О.&nbsp;&#8645;
+                        </div>
+                        <div class="w3-twothird" onclick="sortHTML('person_list', '.person_item', '.person_speciality')" style="cursor:pointer">
+                            Специальность&nbsp;&#8645;
+                        </div>
+                    </div>
+                    <div id="person_list">
+                        {% for person in persons %}
+                            <div data-id="{{ person.person_id }}" data-fio="{{ person.fio }}" data-speciality="{{ person.speciality }}" class="person_item w3-padding w3-border-bottom w3-border-blue">
+                                <div class="w3-row w3-padding person-info">
+                                    <div class="w3-third">
+                                        <div class="search_item person_fio">
+                                            {{ person.fio }}
+                                        </div>
+                                        <div>
+                                            <button class="w3-button w3-border w3-padding-small w3-round w3-hide-small nomerki">Номерки</button>
+                                        </div>
+                                    </div>
+                                    <div class="w3-twothird">
+                                        <div class="search_item person_speciality">{{ person.speciality }} {% if person.uch %}(Участки: {{ person.uch }}){% endif %}</div>
+                                        {% for item in person.info %}
+                                            <div class="w3-small">{{ item }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    {% endblock right_column %}
+    <!-- End Right Column -->
+</div>
+
+<div id="modal_auth" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+        <header class="w3-container w3-teal">
+            <span onclick="closeAuthForm()" class="w3-button w3-display-topright">&times;</span>
+            <h2>Авторизация</h2>
+        </header>
+        <div class="w3-container">
+            <form onsubmit="return ajax_login()" class="w3-margin-bottom" method="post" name="login" autocomplete="on">
+                {% csrf_token %}
+                <div id="auth-errors-list" class="w3-panel w3-round w3-red w3-padding" style="display:none;"></div>
+                <p>
+                    <label for="{{ login_form.name.id_for_label }}" class="w3-text-grey">{{ login_form.name.label }}</label>
+                    {{ login_form.name }}
+                </p>
+                <p>
+                    <label for="{{ login_form.polis.id_for_label }}" class="w3-text-grey">{{ login_form.polis.label }}</label>
+                    {{ login_form.polis }}
+                </p>
+                <div class="w3-row">
+                    <div class="w3-twothird">
+                       <button class="w3-button w3-block w3-theme-d3 w3-round" type="submit">Авторизация</button>
+                    </div>
+                    <div class="w3-third" style="padding-left:16px">
+                       <button class="w3-button w3-block w3-theme-d1 w3-round" type="reset">Очистить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <footer class="w3-container w3-teal">
+            <p>Ваши ФИО и номер медполиса должны быть в базе данных регистратуры</p>
+        </footer>
+    </div>
+</div>
+<div id="success_modal_container" class="w3-modal">
+    <div id="success_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom" style="display:none;">
+        <header class="w3-container w3-green">
+            <span onclick="closeSuccessAuth()" class="w3-button w3-display-topright">&times;</span>
+            <h2>Авторизация успешна</h2>
+        </header>
+        <div class="w3-container">
+            <h2 id="success_fio"></h2>
+            <div class="w3-panel"><button class="w3-button w3-theme-d3 w3-round" onclick="closeSuccessAuth()">Продолжить</button></div>
+        </div>
+        <div class="w3-container w3-teal">
+            <p>Не забудьте выйти по окончании работы. Спасибо.</p>
+        </div>
+    </div>
+</div>
+
+<div id="signin_modal_container" class="w3-modal">
+    <div id="signin_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom w3-round-xlarge w3-theme-d2 w3-border-lightgrey w3-border" style="max-width:600px">
+        <div class="w3-container w3-cell-row">
+            <div class="w3-cell-row w3-border-bottom w3-border-theme">
+                <div class="w3-cell w3-cell-middle" style="width:50%">
+                    <div>СПЕЦИАЛЬНОСТЬ</div>
+                </div>
+                <div class="w3-cell" style="width:50%">
+                    <h4 id="signin_speciality"></h4>
+                </div>
+            </div>
+            <div class="w3-cell-row w3-border-bottom w3-border-theme">
+                <div class="w3-cell w3-cell-middle" style="width:50%">
+                    <div>СПЕЦИАЛИСТ</div>
+                </div>
+                <div class="w3-cell w3-cell-middle" style="width:50%">
+                    <h4 id="signin_fio"></h4>
+                </div>
+            </div>
+            <div class="w3-cell-row w3-border-bottom w3-border-theme">
+                <div class="w3-cell w3-cell-middle" style="width:50%">
+                    <div>ДАТА</div>
+                </div>
+                <div class="w3-cell w3-cell-middle" style="width:50%">
+                    <h4 id="signin_date"></h4>
+                </div>
+            </div>
+            <div class="w3-cell-row">
+                <div class="w3-cell w3-cell-middle" style="width:50%">
+                    <div>ВРЕМЯ</div>
+                </div>
+                <div class="w3-cell w3-cell-middle"  style="width:50%">
+                    <h4 id="signin_time"></h4>
+                </div>
+            </div>
+        </div>
+        <div class="w3-cell-row" style="cursor:pointer;">
+            <div class="w3-cell w3-cell-middle w3-hover-theme w3-border-lightgrey w3-border-top w3-border-right w3-center w3-padding-16"
+                 style="border-bottom-left-radius: 16px;width:50%;"
+                 onclick="sign_person_in()">
+                ЗАПИСАТЬСЯ
+            </div>
+            <div class="w3-cell w3-cell-middle w3-hover-theme w3-border-lightgrey w3-border-top w3-center w3-padding-16"
+                 style="border-bottom-right-radius: 16px;"
+                 onclick="closeSignIn()">
+                ОТМЕНИТЬ
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock page_container %}
+
+{% block bottom_custom_js %}
+<script>
+{% include  'igis_udm/modal_img_hospital_detail.js' %}
+
+{% include  'igis_udm/ajax.js' %}
+
+{% include  'igis_udm/my_utils.js' %}
+
+{% if failure %}
+{% include  'igis_udm/failure.js' %}
+{% endif %}
+</script>
+{% endblock %}

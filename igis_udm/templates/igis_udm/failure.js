@@ -1,0 +1,1 @@
+document.getElementById('failure_modal_container').style.display='block'

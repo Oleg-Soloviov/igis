@@ -1,0 +1,50 @@
+{"uch":"215",
+"uchg":"0",
+"uchc":"0",
+"kl":"38210",
+"p":"1849130846000162",
+"f":"Соловьев",
+"i":"Олег",
+"o":"Валентинович",
+"key":"a7bf9fc5d324731a0dfb792742d37441"}
+
+
+"{"uch":"215",
+"uchg":"14",
+"uchc":"0",
+"kl":"580",
+"p":"1874350885000174",
+"f":"Соловьева",
+"i":"Галина",
+"o":"Яковлевна",
+"key":"c964157190e18b6fb153e740fb62f3bf"}"
+
+javascript:winbox(
+    2,
+    '/com/online/zapis.php?obj=10&kw=650&d=20171221&t=11:00',
+    '%D0%97%D0%B0%D0%BF%D0%B8%D1%81%D1%8C%20%D0%BD%D0%B0%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC',
+    400,
+    null,
+    wbclose())
+
+
+http://igis.ru/com/online/zapis.php?obj=10&kw=650&d=20171222&t=10:00&rnd=92315
+
+
+<script>loadpage_tm=0; alert('Поздравляем! Вы успешно записаны на прием!\n\nУВАЖАЕМЫЕ ПАЦИЕНТЫ!\n\nВнимательно проверьте - ваш номерок должен появиться в списке записей'); window.location='?obj=10';</script>
+
+<b><font color=red>Ошибка авторизации. Вам необходимо пройти авторизацию.</b>
+
+
+Вы поставлены в очередь на получение номерка, ожидайте ответа больницы...
+Ожидание записи может занять несколько минут
+
+javascript:winbox(2,'/com/online/delete.php?obj=10&kw=9171&d=20171229&t=15:00','%D0%9E%D1%82%D0%BC%D0%B5%D0%BD%D0%B0%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80%D0%BA%D0%B0',400)
+http://igis.ru/com/online/delete.php?delete=1&obj=10&kw=9171&d=20171229&t=15:00&rnd=19296
+
+
+У вас уже есть номерок к данной специальности
+
+could not connect to server: No such file or directory
+	Is the server running locally and accepting
+	connections on Unix domain socket "/var/run/postgresql/.s.PGSQL.5432"?
