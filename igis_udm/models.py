@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 
 class Place(models.Model):
@@ -24,7 +24,7 @@ class Hospital(models.Model):
     igis_name = models.CharField(max_length=255, null=True, blank=True)
     igis_url = models.URLField(max_length=255, null=True, blank=True, unique=True)
     igis_obj = models.SmallIntegerField(unique=True)
-    place = models.ForeignKey(Place, verbose_name='населенный пункт')
+    place = models.ForeignKey(Place, verbose_name='населенный пункт', on_delete=models.CASCADE,)
     phone = models.CharField('телефон', max_length=100, null=True, blank=True)
     slug = models.SlugField(unique=True)
     address = models.CharField('адрес', max_length=255, null=True, blank=True)

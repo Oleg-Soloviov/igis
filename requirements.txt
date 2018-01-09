@@ -7,7 +7,6 @@ chardet==3.0.4
 constantly==15.1.0
 cryptography==2.0.3
 cssselect==1.0.1
-Django==1.11.3
 django-mptt==0.8.7
 fake-useragent==0.1.8
 hyperlink==17.3.0
