@@ -1,4 +1,4 @@
-from settings import *
+from myproject.settings import *
 
 DATABASES = {
     'default': {
