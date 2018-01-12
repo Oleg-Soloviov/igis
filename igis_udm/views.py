@@ -403,6 +403,7 @@ class HospitalGetPersonTime(View):
                     for div in divs:
                         time_links = div.xpath('a[@class="btn green"]')
                         sign_date = div.xpath('h2')[0].text_content()
+                        print(sign_date)
                         m = re.search(r'[\d]{2}.[\d]{2}.[\d]{4}', sign_date)
                         foo_date = m.group(0)
                         foo_date = datetime.strptime(foo_date, '%d.%m.%Y')

@@ -169,17 +169,19 @@ function last_alarm_before_signin() {
         var specialist_id = this.parentElement.parentElement.parentElement.getAttribute('data-id');
         var specialist_name = this.parentElement.parentElement.parentElement.getAttribute('data-fio');
         var specialist_speciality = this.parentElement.parentElement.parentElement.getAttribute('data-speciality');
-        var signin_date = this.getAttribute('data-sign-date');
-        var d = new Date(signin_date.substr(0, 4), signin_date.substr(4, 2)-1, signin_date.substr(6, 2))
+        var d = new Date(this.getAttribute('data-sign-date'));
         var signin_time = this.getAttribute('data-sign-time');
 
         document.getElementById('signin_fio').innerHTML = specialist_name;
         document.getElementById('signin_speciality').innerHTML = specialist_speciality;
-        document.getElementById('signin_date').innerHTML = signin_date.substr(6, 2) + ' ' + full_months[signin_date.substr(4, 2)-1] + ' (' + full_week_days[d.getDay()] + ')';
+        document.getElementById('signin_date').innerHTML = d.getDate() + ' ' + full_months[d.getMonth()] + ' (' + full_week_days[d.getDay()] + ')';
         document.getElementById('signin_time').innerHTML = signin_time;
+        var r_month = (d.getMonth() < 10) ? '0' + (d.getMonth() + 1) : d.getMonth() + 1;
+        console.log(r_month)
         signin_request_data = 'specialist_id=' + specialist_id +                   //id врача
-                               '&date=' + signin_date +                             //дата (20171223)
+                               '&date=' + d.getFullYear() + r_month + d.getDate() + //дата (20171223)
                                '&time=' + signin_time;                              //время (11:20)
+                               alert(signin_request_data);
         overlay.style.display = 'block';
     }
     else{
