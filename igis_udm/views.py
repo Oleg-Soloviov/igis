@@ -66,7 +66,7 @@ class HospitalDetailView(DetailView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url)
+        r = r_session.get(url, timeout=(1.5, 9))
         self.request.session['r_session'] = r_session
 
         if r_session.cookies.get(medical_cookie, '+') != '+':
@@ -148,7 +148,12 @@ class HospitalLoginFormView(FormView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url, params=params)
+        try:
+            r = r_session.get(url, params=params, timeout=(1.5, 9))
+        except Timeout:
+            data['status'] = 'error'
+            data['failure'] = 'Сервер больницы не отвечает, попробуйте еще раз.'
+            return JsonResponse(data, status=200, safe=False)
         self.request.session['r_session'] = r_session
 
         doc = html.document_fromstring(r.text)
@@ -174,7 +179,7 @@ class HospitalLoginFormView(FormView):
                 self.request.session['user'] = r_session.cookies.get(medical_cookie, False)
                 url = 'http://igis.ru/online'
                 params = {'obj': self.request.session['igis_obj_id']}
-                r = r_session.get(url, params=params)
+                r = r_session.get(url, params=params, timeout=(1.5, 9))
                 self.request.session['r_session'] = r_session
                 doc = html.document_fromstring(r.text)
                 # получим все данные о записях пациента
@@ -248,128 +253,128 @@ class HospitalLogOutFormView(View):
             return JsonResponse(data, status=200, safe=False)
 
 # not actual
-class HospitalGetInfoFormView(FormView):
-    form_class = DateOfSignForm
-    template_name = 'igis_udm/hospital_detail.html'
-
-    def form_valid(self, form):
-        data = {}
-        data['persons'] = {}
-        data['status'] = ''
-        failure = ''
-
-        date_of_sign_timestamp = form.cleaned_data['date']
-        data['date_of_sign'] = date_of_sign_timestamp
-
-        url = 'http://igis.ru/online?obj={}&page=zap&date={}'.format(form.cleaned_data['obj'], date_of_sign_timestamp)
-        # url = 'http://igis.ru/online?obj={}&page=zap'.format(self.request.session['igis_obj_id'])
-        r = requests.get(url)
-        doc = html.document_fromstring(r.text)
-        print(date_of_sign_timestamp, form.cleaned_data['obj'])
-        time_uch_pattern = re.compile(r'Время работы:[\s]*(?P<work_time>[-\w\s:]*)[\s]+\|[\s]*Прием (?P<reception>[.\w\s]+)[\s]+\|[\s]+Участки:[\s]+(?P<sector>[\w\s]+)')
-        zapis_pattern = re.compile(r"javascript:zapis\('(?P<obj>[\d]+)','(?P<timestamp>[\d]+)','(?P<personal_kod>[\d]+)','(?P<time>[\d:]+)','(?P<uch>[-\w]+)'\)")
-
-
-        if doc.xpath('//div[@class="alert-red" and contains(.//text(), "На указанный день свободных номерков нет")]') \
-                or doc.xpath('//div[@class="alert-red" and contains(.//text(), "На указанный день номерки не сформированы")]'):
-            data['status'] = 'failure'
-            data['failure'] = 'Свободных номерков нет на сегодня.'
-        else:
-            my_divs = doc.xpath('//h2[contains(text(), "Список доступных номерков")]/following-sibling::div')
-
-            try:
-                del my_divs[0]  # удалим пустой див
-            except Exception as e:
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                failure += '[line {line}] Не могу получить необходимые данные.'.format(line=exc_tb.tb_lineno)
-
-            my_date_hrefs = doc.xpath('//h2[contains(text(), "Список доступных дат")]/following-sibling::a[@class="btn blue" or @class="btn orange"]/@href')
-            new_dates = [x.split('date=')[1] for x in my_date_hrefs]
-            new_dates = [int(ts) for ts in new_dates]
-            if date_of_sign_timestamp not in new_dates:
-                new_dates.append(date_of_sign_timestamp)
-            new_dates.sort()
-
-            speciality = ''
-
-            for div in my_divs:
-                print('counter divs: ', len(my_divs))
-                try:
-                    if not failure and div.xpath('contains(@style, "background: #034EA2")'):    # находим специальность врача
-                        foo = div.text_content()
-                        speciality = foo.strip()
-                        continue
-                except Exception as e:
-                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                    failure = '[line {line}] {exc}'.format(exc=e, line=exc_tb.tb_lineno)
-
-                try:
-                    if not failure and div.xpath('h3'): # здесь получим инфу о враче
-                        item = {}
-                        person_url = div.xpath('h3/a/@href')[0]
-                        m = re.search('id=(?P<person_id>[\d]+)', person_url)
-                        person_id = m.group('person_id')
-                        item['speciality'] = speciality
-                        item['new_dates'] = new_dates
-                        for item_bar in div.iterchildren():
-                            if item_bar.tag == 'h3':
-                                item['fio'] = item_bar.text_content()
-                                if div.xpath('text()[contains(., "Время работы")]'):
-                                    foo = div.xpath('text()[contains(., "Время работы")]')[0]
-                                    m = time_uch_pattern.search(foo.strip())
-                                    item['work_time'] = m.group('work_time')
-                                    item['reception'] = m.group('reception')
-                                    item['sector'] = m.group('sector')
-                                continue
-                            else:
-                                item['info'] = []
-                                foo = item_bar.text_content()
-                                item['info'].append(foo.strip())
-                        continue
-                except Exception as e:
-                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                    failure = '[line {line}] {exc}'.format(exp=e, line=exc_tb.tb_lineno)
-
-                try:
-                    if not failure and div.xpath('a'):  # свободные номерки
-                        item['schedule_time'] = []
-                        for a in div.xpath('a'):
-                            if a.xpath('contains(@class, "green")'):
-                                time_item = {}
-                                time_item['free'] = 'true'
-                                time_item['time'] = a.text_content()
-                                foo = a.xpath('@onclick')[0]
-                                m = zapis_pattern.search(foo)
-                                time_item['obj'] = m.group('obj')
-                                time_item['timestamp'] = m.group('timestamp')
-                                time_item['personal_kod'] = m.group('personal_kod')
-                                time_item['time'] = m.group('time')
-                                time_item['uch'] = m.group('uch')
-
-                                item['schedule_time'].append(time_item)
-                            else:
-                                time_item = {}
-                                time_item['free'] = 'false'
-                                time_item['time'] = a.text_content()
-                                item['schedule_time'].append(time_item)
-                except Exception as e:
-                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                    failure = '[line {line}] {exc}'.format(exc=e, line=exc_tb.tb_lineno)
-                    data['failure'] = failure
-                data['persons'][person_id] = item
-                print(item['fio'])
-        if data['persons']:
-            print(data['persons'][person_id])
-            print('person counter: ', len(data['persons']))
-        else:
-            print(data)
-
-        return JsonResponse(data, status=200, safe=False)
-
-    def form_invalid(self, form):
-        data = form.errors.as_json()
-        print(data)
-        return HttpResponseBadRequest(data, content_type='application/json')
+# class HospitalGetInfoFormView(FormView):
+#     form_class = DateOfSignForm
+#     template_name = 'igis_udm/hospital_detail.html'
+#
+#     def form_valid(self, form):
+#         data = {}
+#         data['persons'] = {}
+#         data['status'] = ''
+#         failure = ''
+#
+#         date_of_sign_timestamp = form.cleaned_data['date']
+#         data['date_of_sign'] = date_of_sign_timestamp
+#
+#         url = 'http://igis.ru/online?obj={}&page=zap&date={}'.format(form.cleaned_data['obj'], date_of_sign_timestamp)
+#         # url = 'http://igis.ru/online?obj={}&page=zap'.format(self.request.session['igis_obj_id'])
+#         r = requests.get(url)
+#         doc = html.document_fromstring(r.text)
+#         print(date_of_sign_timestamp, form.cleaned_data['obj'])
+#         time_uch_pattern = re.compile(r'Время работы:[\s]*(?P<work_time>[-\w\s:]*)[\s]+\|[\s]*Прием (?P<reception>[.\w\s]+)[\s]+\|[\s]+Участки:[\s]+(?P<sector>[\w\s]+)')
+#         zapis_pattern = re.compile(r"javascript:zapis\('(?P<obj>[\d]+)','(?P<timestamp>[\d]+)','(?P<personal_kod>[\d]+)','(?P<time>[\d:]+)','(?P<uch>[-\w]+)'\)")
+#
+#
+#         if doc.xpath('//div[@class="alert-red" and contains(.//text(), "На указанный день свободных номерков нет")]') \
+#                 or doc.xpath('//div[@class="alert-red" and contains(.//text(), "На указанный день номерки не сформированы")]'):
+#             data['status'] = 'failure'
+#             data['failure'] = 'Свободных номерков нет на сегодня.'
+#         else:
+#             my_divs = doc.xpath('//h2[contains(text(), "Список доступных номерков")]/following-sibling::div')
+#
+#             try:
+#                 del my_divs[0]  # удалим пустой див
+#             except Exception as e:
+#                 exc_type, exc_obj, exc_tb = sys.exc_info()
+#                 failure += '[line {line}] Не могу получить необходимые данные.'.format(line=exc_tb.tb_lineno)
+#
+#             my_date_hrefs = doc.xpath('//h2[contains(text(), "Список доступных дат")]/following-sibling::a[@class="btn blue" or @class="btn orange"]/@href')
+#             new_dates = [x.split('date=')[1] for x in my_date_hrefs]
+#             new_dates = [int(ts) for ts in new_dates]
+#             if date_of_sign_timestamp not in new_dates:
+#                 new_dates.append(date_of_sign_timestamp)
+#             new_dates.sort()
+#
+#             speciality = ''
+#
+#             for div in my_divs:
+#                 print('counter divs: ', len(my_divs))
+#                 try:
+#                     if not failure and div.xpath('contains(@style, "background: #034EA2")'):    # находим специальность врача
+#                         foo = div.text_content()
+#                         speciality = foo.strip()
+#                         continue
+#                 except Exception as e:
+#                     exc_type, exc_obj, exc_tb = sys.exc_info()
+#                     failure = '[line {line}] {exc}'.format(exc=e, line=exc_tb.tb_lineno)
+#
+#                 try:
+#                     if not failure and div.xpath('h3'): # здесь получим инфу о враче
+#                         item = {}
+#                         person_url = div.xpath('h3/a/@href')[0]
+#                         m = re.search('id=(?P<person_id>[\d]+)', person_url)
+#                         person_id = m.group('person_id')
+#                         item['speciality'] = speciality
+#                         item['new_dates'] = new_dates
+#                         for item_bar in div.iterchildren():
+#                             if item_bar.tag == 'h3':
+#                                 item['fio'] = item_bar.text_content()
+#                                 if div.xpath('text()[contains(., "Время работы")]'):
+#                                     foo = div.xpath('text()[contains(., "Время работы")]')[0]
+#                                     m = time_uch_pattern.search(foo.strip())
+#                                     item['work_time'] = m.group('work_time')
+#                                     item['reception'] = m.group('reception')
+#                                     item['sector'] = m.group('sector')
+#                                 continue
+#                             else:
+#                                 item['info'] = []
+#                                 foo = item_bar.text_content()
+#                                 item['info'].append(foo.strip())
+#                         continue
+#                 except Exception as e:
+#                     exc_type, exc_obj, exc_tb = sys.exc_info()
+#                     failure = '[line {line}] {exc}'.format(exp=e, line=exc_tb.tb_lineno)
+#
+#                 try:
+#                     if not failure and div.xpath('a'):  # свободные номерки
+#                         item['schedule_time'] = []
+#                         for a in div.xpath('a'):
+#                             if a.xpath('contains(@class, "green")'):
+#                                 time_item = {}
+#                                 time_item['free'] = 'true'
+#                                 time_item['time'] = a.text_content()
+#                                 foo = a.xpath('@onclick')[0]
+#                                 m = zapis_pattern.search(foo)
+#                                 time_item['obj'] = m.group('obj')
+#                                 time_item['timestamp'] = m.group('timestamp')
+#                                 time_item['personal_kod'] = m.group('personal_kod')
+#                                 time_item['time'] = m.group('time')
+#                                 time_item['uch'] = m.group('uch')
+#
+#                                 item['schedule_time'].append(time_item)
+#                             else:
+#                                 time_item = {}
+#                                 time_item['free'] = 'false'
+#                                 time_item['time'] = a.text_content()
+#                                 item['schedule_time'].append(time_item)
+#                 except Exception as e:
+#                     exc_type, exc_obj, exc_tb = sys.exc_info()
+#                     failure = '[line {line}] {exc}'.format(exc=e, line=exc_tb.tb_lineno)
+#                     data['failure'] = failure
+#                 data['persons'][person_id] = item
+#                 print(item['fio'])
+#         if data['persons']:
+#             print(data['persons'][person_id])
+#             print('person counter: ', len(data['persons']))
+#         else:
+#             print(data)
+#
+#         return JsonResponse(data, status=200, safe=False)
+#
+#     def form_invalid(self, form):
+#         data = form.errors.as_json()
+#         print(data)
+#         return HttpResponseBadRequest(data, content_type='application/json')
 
 
 class HospitalGetPersonTime(View):
@@ -387,10 +392,10 @@ class HospitalGetPersonTime(View):
         if form.is_valid():
             url = 'http://igis.ru/online?obj={}&page=doc&id={}'.format(self.request.session['igis_obj_id'], form.cleaned_data['id'])
             try:
-                r = requests.get(url, timeout=(3.05, 27))
+                r = requests.get(url, timeout=(1.5, 9))
             except Timeout:
                 data['status'] = 'error'
-                data['failure'] = 'Сервер больницы не отвечает.'
+                data['failure'] = 'Сервер больницы не отвечает. Попробуйте еще раз.'
             else:
                 doc = html.document_fromstring(r.text)
                 if doc.xpath('//h2[contains(text(), "Список доступных номерков")]/../following-sibling::div//*[contains(text(), "К выбранному специалисту свободных номерков нет")]'):
@@ -438,9 +443,14 @@ class SignInFormView(FormView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url, params=params)
+        try:
+            r = r_session.get(url, params=params, timeout=(1.5, 9))
+        except Timeout:
+            data['status'] = 'error'
+            data['failure'] = 'Сервер больницы не отвечает. Попробуйте еще раз.'
+            return JsonResponse(data, status=200, safe=False)
+
         self.request.session['r_session'] = r_session
-        # medical_cookie = 'medical__{}'.format(self.request.session['igis_obj_id'])
         if self.request.session.get('user', False):
             data['info'] = self.request.session.get('user', False)
         else:
@@ -452,7 +462,7 @@ class SignInFormView(FormView):
         if r.ok and ("Вы успешно записаны на прием" in r.text):
             url = 'http://igis.ru/online/'
             params = {'obj': self.request.session['igis_obj_id']}
-            r = r_session.get(url, params=params)
+            r = r_session.get(url, params=params, timeout=(1.5, 9))
             self.request.session['r_session'] = r_session
 
             # doc = html.document_fromstring(r.text)
@@ -539,16 +549,15 @@ class SignOutFormView(FormView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url, params=params)
+        r = r_session.get(url, params=params, timeout=(1.5, 9))
         self.request.session['r_session'] = r_session
 
         print(r.text)
-        print('r-ok = ', r.ok)
         if r.ok and ('Ваша запись успешно отменена' in r.text):
             data['status'] = 'signout'
             url = 'http://igis.ru/online'
             params = {'obj': self.request.session['igis_obj_id']}
-            r = r_session.get(url, params=params)
+            r = r_session.get(url, params=params, timeout=(1.5, 9))
             self.request.session['r_session'] = r_session
 
             # doc = html.document_fromstring(r.text)
