@@ -479,10 +479,11 @@ class SignInFormView(FormView):
                 for item in sign_items:
                     i = {}
                     sign_info = item.text_content()
-                    m = re.search(r'Ф.И.О: ([\w ]+)\(', sign_info)
+                    m = re.search(r'Ф.И.О: ([\w -]+)\(', sign_info)
                     if m:
                         i['sign_specialist_name'] = m.group(1)
-                    m = re.search(r'Специальность:\s*([\w .]+)\s*Ф.И.О', sign_info)
+                    m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
+                    print(m)
                     if m:
                         i['sign_specialist_role'] = m.group(1)
                     m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
@@ -573,10 +574,11 @@ class SignOutFormView(FormView):
                 for item in sign_items:
                     i = {}
                     sign_info = item.text_content()
-                    m = re.search(r'Ф.И.О: ([\w ]+)\(', sign_info)
+                    m = re.search(r'Ф.И.О: ([\w -]+)\(', sign_info)
                     if m:
                         i['sign_specialist_name'] = m.group(1)
-                    m = re.search(r'Специальность:\s*([\w .]+)\s*Ф.И.О', sign_info)
+                    m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
+                    print(m)
                     if m:
                         i['sign_specialist_role'] = m.group(1)
                     m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)

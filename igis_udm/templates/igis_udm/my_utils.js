@@ -181,7 +181,6 @@ function last_alarm_before_signin() {
         signin_request_data = 'specialist_id=' + specialist_id +                   //id врача
                                '&date=' + d.getFullYear() + r_month + d.getDate() + //дата (20171223)
                                '&time=' + signin_time;                              //время (11:20)
-                               alert(signin_request_data);
         overlay.style.display = 'block';
     }
     else{
@@ -193,68 +192,74 @@ function update_zapisy(sign_items) {
     var zapisi = document.getElementById('zapisi');
     var zapisi_items_div = document.getElementById('zapisi_items');
     zapisi_items_div.innerHTML = '';
-    for (var i=0; i < sign_items.length; i++) {
-        var panel_div = document.createElement('div');
-        panel_div.className = 'w3-panel w3-border w3-light-grey w3-round-large';
+    if (sign_items) {
+        for (var i=0; i < sign_items.length; i++) {
+            var panel_div = document.createElement('div');
+            panel_div.className = 'w3-panel w3-border w3-light-grey w3-round-large';
 
-        var row_div = document.createElement('div');
-        row_div.className = 'w3-row'
-        var el_par = document.createElement('p');
-        var el_text = document.createTextNode(sign_items[i].sign_specialist_role);
-        el_par.appendChild(el_text);
-        row_div.appendChild(el_par);
-        panel_div.appendChild(row_div);
+            var row_div = document.createElement('div');
+            row_div.className = 'w3-row'
+            var el_par = document.createElement('p');
+            var el_text = document.createTextNode(sign_items[i].sign_specialist_role);
+            el_par.appendChild(el_text);
+            row_div.appendChild(el_par);
+            panel_div.appendChild(row_div);
 
-        row_div = document.createElement('div');
-        row_div.className = 'w3-row'
-        el_par = document.createElement('p');
-        el_text = document.createTextNode(sign_items[i].sign_specialist_name);
-        el_par.appendChild(el_text);
-        row_div.appendChild(el_par);
-        panel_div.appendChild(row_div);
+            row_div = document.createElement('div');
+            row_div.className = 'w3-row'
+            el_par = document.createElement('p');
+            el_text = document.createTextNode(sign_items[i].sign_specialist_name);
+            el_par.appendChild(el_text);
+            row_div.appendChild(el_par);
+            panel_div.appendChild(row_div);
 
-        row_div = document.createElement('div');
-        row_div.className = 'w3-cell-row';
+            row_div = document.createElement('div');
+            row_div.className = 'w3-cell-row';
 
-        var el_div = document.createElement('div');
-        el_div.className = 'w3-cell';
-        el_text = document.createTextNode('Дата и время записи');
-        el_div.appendChild(el_text);
-        row_div.appendChild(el_div);
+            var el_div = document.createElement('div');
+            el_div.className = 'w3-cell';
+            el_text = document.createTextNode('Дата и время записи');
+            el_div.appendChild(el_text);
+            row_div.appendChild(el_div);
 
-        el_div = document.createElement('div');
-        el_div.className = 'w3-cell';
-        el_text = document.createTextNode(sign_items[i].sign_date)
-        el_div.appendChild(el_text);
-        row_div.appendChild(el_div);
+            el_div = document.createElement('div');
+            el_div.className = 'w3-cell';
+            el_text = document.createTextNode(sign_items[i].sign_date)
+            el_div.appendChild(el_text);
+            row_div.appendChild(el_div);
 
-        el_div = document.createElement('div');
-        el_div.className = 'w3-cell';
-        el_text = document.createTextNode(sign_items[i].sign_time)
-        el_div.appendChild(el_text);
-        row_div.appendChild(el_div);
+            el_div = document.createElement('div');
+            el_div.className = 'w3-cell';
+            el_text = document.createTextNode(sign_items[i].sign_time)
+            el_div.appendChild(el_text);
+            row_div.appendChild(el_div);
 
-        panel_div.appendChild(row_div);
+            panel_div.appendChild(row_div);
 
-        row_div = document.createElement('div');
-        row_div.className = 'w3-row w3-margin-top';
-        var el_button = document.createElement('button');
-        el_text = document.createTextNode('Отменить');
-        el_button.appendChild(el_text);
-        el_button.className = 'w3-button w3-teal w3-margin-bottom w3-round w3-right';
-        //el_button.setAttribute('data-obj', item.obj);
-        el_button.setAttribute('data-id', sign_items[i].id);
-        el_button.setAttribute('data-date', sign_items[i].date);
-        el_button.setAttribute('data-time', sign_items[i].time);
-        el_button.setAttribute('oncklick', 'sign_out(this)');
-//                el_button.addEventListener('click', sign_out);
-        row_div.appendChild(el_button);
+            row_div = document.createElement('div');
+            row_div.className = 'w3-row w3-margin-top';
+            var el_button = document.createElement('button');
+            el_text = document.createTextNode('Отменить');
+            el_button.appendChild(el_text);
+            el_button.className = 'w3-button w3-teal w3-margin-bottom w3-round w3-right';
+            //el_button.setAttribute('data-obj', item.obj);
+            el_button.setAttribute('data-id', sign_items[i].id);
+            el_button.setAttribute('data-date', sign_items[i].date);
+            el_button.setAttribute('data-time', sign_items[i].time);
+            el_button.setAttribute('oncklick', 'sign_out(this)');
+    //                el_button.addEventListener('click', sign_out);
+            row_div.appendChild(el_button);
 
-        panel_div.appendChild(row_div);
-        zapisi_items_div.appendChild(panel_div);
-    }
+            panel_div.appendChild(row_div);
+            zapisi_items_div.appendChild(panel_div);
+        }
     document.getElementById('zapisi_net').style.display = 'none';
     document.getElementById('zapisi_items').style.display = 'block';
+    }
+    else{
+    document.getElementById('zapisi_net').style.display = 'block';
+    document.getElementById('zapisi_items').style.display = 'none';
+    }
 }
 
 
