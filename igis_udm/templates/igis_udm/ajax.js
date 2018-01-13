@@ -122,7 +122,8 @@ function ajax_login() {
                     el_button.setAttribute('data-id', myObj.sign_items[i].id);
                     el_button.setAttribute('data-date', myObj.sign_items[i].date);
                     el_button.setAttribute('data-time', myObj.sign_items[i].time);
-                    el_button.addEventListener('click', sign_out);
+                    //el_button.addEventListener('click', sign_out);
+                    el_button.onclick = sign_out;
                     row_div.appendChild(el_button);
 
                     panel_div.appendChild(row_div);
@@ -379,6 +380,9 @@ function get_ajax_time(evt) {
 
 
 function sign_out(el) {
+    if (el.type == "click") {
+    el = el.target;
+    }
     var xhttp = new XMLHttpRequest();
     var auth_form = document.forms['login'];
     var overlay = document.getElementById('signin_modal_container');

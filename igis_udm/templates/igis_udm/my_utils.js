@@ -246,8 +246,8 @@ function update_zapisy(sign_items) {
             el_button.setAttribute('data-id', sign_items[i].id);
             el_button.setAttribute('data-date', sign_items[i].date);
             el_button.setAttribute('data-time', sign_items[i].time);
-            el_button.setAttribute('oncklick', 'sign_out(this)');
-    //                el_button.addEventListener('click', sign_out);
+//            el_button.setAttribute('oncklick', 'sign_out(this)');
+            el_button.addEventListener('click', sign_out);
             row_div.appendChild(el_button);
 
             panel_div.appendChild(row_div);
