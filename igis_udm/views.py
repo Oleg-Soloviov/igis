@@ -578,8 +578,8 @@ class SignOutFormView(FormView):
 
             doc = html.document_fromstring(r.text)
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
+            data['sign_items'] = []
             if sign_items:
-                data['sign_items'] = []
                 for item in sign_items:
                     i = {}
                     sign_info = item.text_content()
@@ -611,8 +611,7 @@ class SignOutFormView(FormView):
                             i['time'] = m.group(1)
 
                     data['sign_items'].append(i)
-                self.request.session['sign_items'] = data['sign_items']
-
+            self.request.session['sign_items'] = data['sign_items']
             return JsonResponse(data, status=200, safe=False)
         else:
             data['status'] = 'error'
