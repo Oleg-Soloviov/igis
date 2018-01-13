@@ -122,8 +122,8 @@ function ajax_login() {
                     el_button.setAttribute('data-id', myObj.sign_items[i].id);
                     el_button.setAttribute('data-date', myObj.sign_items[i].date);
                     el_button.setAttribute('data-time', myObj.sign_items[i].time);
-                    //el_button.addEventListener('click', sign_out);
-                    el_button.onclick = sign_out;
+                    el_button.addEventListener('click', sign_out);
+//                    el_button.onclick = sign_out;
                     row_div.appendChild(el_button);
 
                     panel_div.appendChild(row_div);
@@ -398,7 +398,7 @@ function sign_out(el) {
         var myObj = JSON.parse(this.responseText);
         dObj = myObj; //for debug
         if (myObj.status == 'signout'){
-            update_zapisy(myObj.sign_items)
+            update_zapisy(myObj.sign_items.length)
             } else {
                 document.getElementById('zapisi_net').style.display = 'block';
                 document.getElementById('zapisi_items').style.display = 'none';

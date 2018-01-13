@@ -177,7 +177,6 @@ function last_alarm_before_signin() {
         document.getElementById('signin_date').innerHTML = d.getDate() + ' ' + full_months[d.getMonth()] + ' (' + full_week_days[d.getDay()] + ')';
         document.getElementById('signin_time').innerHTML = signin_time;
         var r_month = (d.getMonth() < 10) ? '0' + (d.getMonth() + 1) : d.getMonth() + 1;
-        console.log(r_month)
         signin_request_data = 'specialist_id=' + specialist_id +                   //id врача
                                '&date=' + d.getFullYear() + r_month + d.getDate() + //дата (20171223)
                                '&time=' + signin_time;                              //время (11:20)

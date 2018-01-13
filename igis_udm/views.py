@@ -560,22 +560,6 @@ class SignOutFormView(FormView):
             r = r_session.get(url, params=params, timeout=(1.5, 9))
             self.request.session['r_session'] = r_session
 
-            # doc = html.document_fromstring(r.text)
-            # x_el  = doc.xpath('//*[contains(text(), "Информация о ваших записях")]')[0]
-            # p_el = x_el.getparent()
-            # sign_el = p_el.getnext()
-            # sing_info = sign_el.text_content()
-            # m = re.search(r'Ф.И.О: ([\w ]+) Дата', sing_info)
-            # if m:
-            #     data['sign_specialist_name'] = m.group(1)
-            # m = re.search(r'Специальность:\s*([\w .]+)\s*Ф.И.О', sing_info)
-            # if m:
-            #     data['sign_specialist_role'] = m.group(1)
-            # m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4} [0-9]{1,2}:[0-9]{2})', sing_info)
-            # if m:
-            #     data['sign_date_time'] = m.group(1)
-            # data['status'] = 'signout'
-
             doc = html.document_fromstring(r.text)
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
             data['sign_items'] = []
