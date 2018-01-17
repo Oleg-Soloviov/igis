@@ -170,7 +170,7 @@ function ajax_login() {
 
     overlay.style.display = 'block';
     overlay.style.cursor = 'wait';
-    xhttp.open("POST", "/udmurtia/login/", true);
+    xhttp.open("POST", "{% url 'login' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.setRequestHeader("X-CSRFToken", auth_form['csrfmiddlewaretoken'].value);
     var data = 'name=' + auth_form['name'].value + '&polis=' + auth_form['polis'].value;
@@ -242,7 +242,7 @@ function ajax_logout() {
 
     };
 
-    xhttp.open("POST", "/udmurtia/logout/", true);
+    xhttp.open("POST", "{% url 'logout' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.setRequestHeader("X-CSRFToken", auth_form['csrfmiddlewaretoken'].value);
 
@@ -336,7 +336,7 @@ function sign_person_in() {
 
     overlay_content.style.display = 'none';
     overlay.style.cursor = 'wait';
-    xhttp.open("POST", "/udmurtia/signin/", true);
+    xhttp.open("POST", "{% url 'signin' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.setRequestHeader("X-CSRFToken", auth_form['csrfmiddlewaretoken'].value);
 
@@ -415,7 +415,7 @@ function sign_out(el) {
     overlay_content.style.display = 'none';
     overlay.style.display = 'block';
     overlay.style.cursor = 'wait';
-    xhttp.open("POST", "/udmurtia/signout/", true);
+    xhttp.open("POST", "{% url 'signout' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.setRequestHeader("X-CSRFToken", auth_form['csrfmiddlewaretoken'].value);
 
