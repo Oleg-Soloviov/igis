@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница не найдена! (Page not found)</title>
+    <style>
+        body {
+            font-family: Verdana,sans-serif;
+            background-color:rgb(241, 241, 241);
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: thin solid #fff;
+            padding-bottom: 15px;
+        }
+        #container {
+            max-width: 600px;
+            margin: auto;
+            padding: 15px;
+            background-color: rgb(0, 150, 136);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h1>Страница не найдена!</h1>
+    <h4>
+        Запрашиваемая Вами страница не найдена.
+        Начните поиск с <a href="{% url 'place_list' %}">главного меню.</a>
+    </h4>
+</div>
+</body>
+</html>
