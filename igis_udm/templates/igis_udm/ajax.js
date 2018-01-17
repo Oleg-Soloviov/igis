@@ -369,7 +369,7 @@ function get_ajax_time(evt) {
     button.disabled = false;
     button.style.cursor = 'auto'
     var f = document.forms['login'];
-    xhttp.open("POST", "/udmurtia/get_time/", true);
+    xhttp.open("POST", "{% url 'get_time' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.setRequestHeader("X-CSRFToken", f['csrfmiddlewaretoken'].value)
 
