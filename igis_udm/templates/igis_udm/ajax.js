@@ -293,7 +293,6 @@ function show_schedule_time(parent_li, myPersonsObj, button) {
             }
             var time_text_node = document.createTextNode(schedule_time[i][0]);
             time_button.setAttribute('data-sign-time', schedule_time[i][0]);
-//            time_button.setAttribute('data-sign-date', "" + new_date.getFullYear() + (new_date.getMonth() + 1) + new_date.getDate());
             time_button.setAttribute('data-sign-date', new_date);
             time_button.appendChild(time_text_node);
             time_button.style.margin = '0 2px 2px 0';
