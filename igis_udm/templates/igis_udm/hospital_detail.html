@@ -237,7 +237,6 @@
         </div>
     </div>
 </div>
-
 <div id="signin_modal_container" class="w3-modal">
     <div id="signin_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom w3-round-xlarge w3-theme-d2 w3-border-lightgrey w3-border" style="max-width:600px">
         <div class="w3-container w3-cell-row">
@@ -283,6 +282,30 @@
             <div class="w3-cell w3-cell-middle w3-hover-theme w3-border-lightgrey w3-border-top w3-center w3-padding-16"
                  style="border-bottom-right-radius: 16px;"
                  onclick="closeSignIn()">
+                ОТМЕНИТЬ
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="info_modal_container" class="w3-modal" {% if error %}style="display:block"{% endif %}>
+    <div id="signin_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom w3-round-xlarge w3-theme-d2 w3-border-lightgrey w3-border" style="max-width:600px">
+        <div class="w3-container w3-cell-row">
+            <div class="w3-cell-row w3-border-bottom w3-border-theme">
+                <div class="w3-cell w3-cell-middle">
+                    Не удалось подключиться к серверу больницы!
+                </div>
+            </div>
+        </div>
+        <div class="w3-cell-row" style="cursor:pointer;">
+            <div class="w3-cell w3-cell-middle w3-hover-theme w3-border-lightgrey w3-border-top w3-border-right w3-center w3-padding-16"
+                 style="border-bottom-left-radius: 16px;width:50%;"
+                 onclick="sign_person_in()">
+                ЗАПИСАТЬСЯ
+            </div>
+            <div class="w3-cell w3-cell-middle w3-hover-theme w3-border-lightgrey w3-border-top w3-center w3-padding-16"
+                 style="border-bottom-right-radius: 16px;"
+                 onclick="closeInfo()">
                 ОТМЕНИТЬ
             </div>
         </div>

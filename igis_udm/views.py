@@ -67,13 +67,11 @@ class HospitalDetailView(DetailView):
         if not r_session:
             r_session = requests.Session()
         try:
-            r = r_session.get(url, timeout=(1.5, 25))
+            r = r_session.get(url, timeout=(1.5, 0.01))
         except Timeout:
-            data['status'] = 'error'
-            data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
+            context['error'] = True
         except Exception as e:
-            data['status'] = 'error'
-            data['failure'] = 'Ошибка обращения к серверу больницы.'
+            context['error'] = True
             print(e)
         else:
             self.request.session['r_session'] = r_session
@@ -157,7 +155,7 @@ class HospitalLoginFormView(FormView):
         if not r_session:
             r_session = requests.Session()
         try:
-            r = r_session.get(url, params=params, timeout=(1.5, 15))
+            r = r_session.get(url, params=params, timeout=(1.5, 25))
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
