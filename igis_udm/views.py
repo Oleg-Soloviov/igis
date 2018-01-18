@@ -67,7 +67,7 @@ class HospitalDetailView(DetailView):
         if not r_session:
             r_session = requests.Session()
         try:
-            r = r_session.get(url, timeout=(1.5, 0.01))
+            r = r_session.get(url, timeout=(1.5, 25))
         except Timeout:
             context['error'] = True
         except Exception as e:
