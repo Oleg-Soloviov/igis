@@ -148,77 +148,97 @@ class HospitalLoginFormView(FormView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url, params=params, timeout=(1.5, 15))
-        self.request.session['r_session'] = r_session
-
-        doc = html.document_fromstring(r.text)
-
-        if r_session.cookies.get(medical_cookie, '+') == '+':
-            self.request.session['user'] = False
+        try:
+            r = r_session.get(url, params=params, timeout=(1.5, 15))
+        except Timeout:
             data['status'] = 'error'
-            mistake = doc.xpath('//font[@color="red"]')
-            if mistake:
-                mistake_text = mistake[0].text_content()
-                if 'Нет ответа от больницы, пробуем подключиться еще' in mistake_text:
-                    data['failure'] = 'Нет ответа от больницы, попробуйте еще раз.'
-                else:
-                    data['failure'] = mistake_text
-            else:
-                data['failure'] = 'Авторизация в больнице не удалась.'
-            return JsonResponse(data, status=200, safe=False)
+            data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
+        except RequestException:
+            data['status'] = 'error'
+            data['failure'] = 'Ошибка обращения к серверу больницы.'
         else:
-            if 'вы успешно авторизованы' in r.text:
-                # перейдем на страницу больницы, чтобы получить данные о записях пациента
-                data['status'] = 'authorized'
-                data['info'] = r_session.cookies.get(medical_cookie, 'Unknown error')
-                self.request.session['user'] = r_session.cookies.get(medical_cookie, False)
-                url = 'http://igis.ru/online'
-                params = {'obj': self.request.session['igis_obj_id']}
-                r = r_session.get(url, params=params, timeout=(1.5, 15))
-                self.request.session['r_session'] = r_session
-                doc = html.document_fromstring(r.text)
-                # получим все данные о записях пациента
-                sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
-                if sign_items:
-                    data['sign_items'] = []
-                    for item in sign_items:
-                        i = {}
-                        sign_info = item.text_content()
-                        m = re.search(r'Ф.И.О: ([\w ]+)\(', sign_info)
-                        if m:
-                            i['sign_specialist_name'] = m.group(1)
-                        m = re.search(r'Специальность:\s*([\w .]+)\s*Ф.И.О', sign_info)
-                        if m:
-                            i['sign_specialist_role'] = m.group(1)
-                        m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
-                        if m:
-                            i['sign_date'] = m.group(1)
-                            i['sign_time'] = m.group(2)
-                        l = item.xpath('./a[contains(text(), "Отменить запись")]')
-                        l = l[0].xpath('@href')
-                        if l:
-                            m = re.search(r'obj=(\d+)&', l[0])
-                            if m:
-                                i['obj'] = m.group(1)
-                            m = re.search(r'kw=(\d+)&', l[0])
-                            if m:
-                                i['id'] = m.group(1)
-                            m = re.search(r'd=(\d+)&', l[0])
-                            if m:
-                                i['date'] = m.group(1)
-                            m = re.search(r't=([\d]{2}:[\d]{2})', l[0])
-                            if m:
-                                i['time'] = m.group(1)
-
-                        data['sign_items'].append(i)
-                    self.request.session['sign_items'] = data['sign_items']
-                return JsonResponse(data, status=200, safe=False)
-            else:
-                # for debug, if there something else
+            self.request.session['r_session'] = r_session
+            doc = html.document_fromstring(r.text)
+            print(r.text)
+            if r_session.cookies.get(medical_cookie, '+') == '+':
+                self.request.session['user'] = False
                 data['status'] = 'error'
-                data['failure'] = 'Неизвестная ошибка'
-                print('Неизвестная ошибка', r.text)
-                return JsonResponse(data, status=200, safe=False)
+                mistake = doc.xpath('//font[@color="red"]')
+                if mistake:
+                    mistake_text = mistake[0].text_content()
+                    if 'Нет ответа от больницы, пробуем подключиться еще' in mistake_text:
+                        data['failure'] = 'Нет ответа от больницы, попробуйте еще раз.'
+                    else:
+                        data['failure'] = mistake_text
+                else:
+                    data['failure'] = 'Авторизация в больнице не удалась. Попробуйте еще раз.'
+            else:
+                if 'вы успешно авторизованы' in r.text:
+                    # перейдем на страницу больницы, чтобы получить данные о записях пациента
+                    data['status'] = 'authorized'
+                    data['info'] = r_session.cookies.get(medical_cookie, 'Unknown error')
+                    self.request.session['user'] = r_session.cookies.get(medical_cookie, False)
+                    url = 'http://igis.ru/online'
+                    params = {'obj': self.request.session['igis_obj_id']}
+                    try:
+                        r = r_session.get(url, params=params, timeout=(1.5, 2))
+                    except Timeout:
+                        data['error'] = 'failed_signs'
+                        data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
+                        print(data)
+                    except Exception as e:
+                        data['error'] = 'failed_signs'
+                        data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
+                        print(e)
+                    else:
+                        self.request.session['r_session'] = r_session
+                        doc = html.document_fromstring(r.text)
+                        # получим все данные о записях пациента
+                        sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
+                        if sign_items:
+                            data['sign_items'] = []
+                            for item in sign_items:
+                                i = {}
+                                sign_info = item.text_content()
+                                m = re.search(r'Ф.И.О: ([\w ]+)\(', sign_info)
+                                if m:
+                                    i['sign_specialist_name'] = m.group(1)
+                                m = re.search(r'Специальность:\s*([\w .]+)\s*Ф.И.О', sign_info)
+                                if m:
+                                    i['sign_specialist_role'] = m.group(1)
+                                m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
+                                if m:
+                                    i['sign_date'] = m.group(1)
+                                    i['sign_time'] = m.group(2)
+                                l = item.xpath('./a[contains(text(), "Отменить запись")]')
+                                l = l[0].xpath('@href')
+                                if l:
+                                    m = re.search(r'obj=(\d+)&', l[0])
+                                    if m:
+                                        i['obj'] = m.group(1)
+                                    m = re.search(r'kw=(\d+)&', l[0])
+                                    if m:
+                                        i['id'] = m.group(1)
+                                    m = re.search(r'd=(\d+)&', l[0])
+                                    if m:
+                                        i['date'] = m.group(1)
+                                    m = re.search(r't=([\d]{2}:[\d]{2})', l[0])
+                                    if m:
+                                        i['time'] = m.group(1)
+
+                                data['sign_items'].append(i)
+                            self.request.session['sign_items'] = data['sign_items']
+                else:
+                    # for debug, if there something else, maybe not actual
+                    data['status'] = 'error'
+                    data['failure'] = 'Неизвестная ошибка. Попробуйте еще раз.'
+        finally:
+            return JsonResponse(data, status=200, safe=False)
+
+
+
+
+
 
 
 class HospitalLogOutFormView(View):
