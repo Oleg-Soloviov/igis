@@ -66,66 +66,74 @@ class HospitalDetailView(DetailView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url, timeout=(1.5, 15))
-        self.request.session['r_session'] = r_session
-
-        if r_session.cookies.get(medical_cookie, '+') != '+':
-            my_user = r_session.cookies.get(medical_cookie)
-            my_user = json.loads(parse.unquote(my_user))
-            context['user'] = my_user
-            self.request.session['user'] = my_user
-
+        try:
+            r = r_session.get(url, timeout=(1.5, 25))
+        except Timeout:
+            data['status'] = 'error'
+            data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
+        except Exception as e:
+            data['status'] = 'error'
+            data['failure'] = 'Ошибка обращения к серверу больницы.'
+            print(e)
         else:
-            context['user'] = False
-            self.request.session['user'] = False
-        context['sign_items'] = self.request.session.get('sign_items', False)
-
-        doc = html.document_fromstring(r.text)
-        rows = doc.xpath('//table[@id="medlist"]/tr')
-
-        for row in rows:
-            if row.xpath('contains(@class, "table-border-light")'):
-                speciality = row.text_content()
-                continue
-            elif row.xpath('./td[@colspan= "7"]'):
-                item = {}
-                item['speciality'] = speciality
-                item['fio'] = row.xpath('./td/div/div/a[1]')[0].text_content()
-                foo = row.xpath('./td/div/div/a[1]/@href')[0]
-                m = re.search(r'id=([\d]+)', foo)
-                item['person_id'] = m.group(1)
-                if row.xpath('./td/div/small'):
-                    #item['info'] = row.xpath('./td/div/small')[0].text_content()
-                    foo = row.xpath('./td/div/small/text()')
-                    item['info'] = []
-                    for txt in foo:
-                        if 'Участки:' in txt:
-                            m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
-                            if m:
-                                item['uch'] = m.group(1)
-                        if 'Ограничение на запись через ИГИС:' in txt:
-                            m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
-                            if 'Ограничений нет' in m.group(1):
-                                continue
+            self.request.session['r_session'] = r_session
+            if r_session.cookies.get(medical_cookie, '+') != '+':
+                my_user = r_session.cookies.get(medical_cookie)
+                my_user = json.loads(parse.unquote(my_user))
+                context['user'] = my_user
+                self.request.session['user'] = my_user
+            else:
+                context['user'] = False
+                self.request.session['user'] = False
+            context['sign_items'] = self.request.session.get('sign_items', False)
+            doc = html.document_fromstring(r.text)
+            rows = doc.xpath('//table[@id="medlist"]/tr')
+            for row in rows:
+                if row.xpath('contains(@class, "table-border-light")'):
+                    speciality = row.text_content()
+                    continue
+                elif row.xpath('./td[@colspan= "7"]'):
+                    item = {}
+                    item['speciality'] = speciality
+                    item['fio'] = row.xpath('./td/div/div/a[1]')[0].text_content()
+                    foo = row.xpath('./td/div/div/a[1]/@href')[0]
+                    m = re.search(r'id=([\d]+)', foo)
+                    item['person_id'] = m.group(1)
+                    if row.xpath('./td/div/small'):
+                        # item['info'] = row.xpath('./td/div/small')[0].text_content()
+                        foo = row.xpath('./td/div/small/text()')
+                        item['info'] = []
+                        for txt in foo:
+                            if 'Участки:' in txt:
+                                m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
+                                if m:
+                                    item['uch'] = m.group(1)
+                            if 'Ограничение на запись через ИГИС:' in txt:
+                                m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
+                                if 'Ограничений нет' in m.group(1):
+                                    continue
+                                else:
+                                    item['info'].append(m.group(1))
                             else:
-                                item['info'].append(m.group(1))
-                        else:
-                            item['info'].append(txt)
+                                item['info'].append(txt)
 
-                else:
-                    item['info'] = ''
-                foo = row.text_content()
-                if 'Номерков нет' in foo:
-                    item['col_n'] = ''
-                else:
-                    m = re.search(r'Номерков - ([\d]+)', foo)
-                    if m:
-                        item['col_n'] = m.group(1)# количество номерков
                     else:
+                        item['info'] = ''
+                    foo = row.text_content()
+                    if 'Номерков нет' in foo:
                         item['col_n'] = ''
-                persons.append(item)
-        context['persons'] = persons
-        return context
+                    else:
+                        m = re.search(r'Номерков - ([\d]+)', foo)
+                        if m:
+                            item['col_n'] = m.group(1)  # количество номерков
+                        else:
+                            item['col_n'] = ''
+                    persons.append(item)
+            context['persons'] = persons
+        finally:
+            return context
+
+
 
 
 class HospitalLoginFormView(FormView):
@@ -153,9 +161,10 @@ class HospitalLoginFormView(FormView):
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
-        except RequestException:
+        except Exception as e:
             data['status'] = 'error'
             data['failure'] = 'Ошибка обращения к серверу больницы.'
+            print(e)
         else:
             self.request.session['r_session'] = r_session
             doc = html.document_fromstring(r.text)
@@ -234,11 +243,6 @@ class HospitalLoginFormView(FormView):
                     data['failure'] = 'Неизвестная ошибка. Попробуйте еще раз.'
         finally:
             return JsonResponse(data, status=200, safe=False)
-
-
-
-
-
 
 
 class HospitalLogOutFormView(View):
