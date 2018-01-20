@@ -2,14 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>{% block title %}Удмуртия. Запись на прием к врачу через интернет.{% endblock title %}</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-<meta name="description" content="{% block meta_description %}Удмуртия. Запись на прием к врачу через интернет.{% endblock %}">
-<link rel="stylesheet" href="{% static 'css/w3.css' %}">
-{% block header_custom_css %}{% endblock %}
-{% block header_custom_js %}{% endblock %}
+  {% include 'igis_udm/google_analitics.html' %}
+  <title>{% block title %}Удмуртия. Запись на прием к врачу через интернет.{% endblock title %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+  <meta name="description" content="{% block meta_description %}Удмуртия. Запись на прием к врачу через интернет.{% endblock %}">
+  <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+  {% block header_custom_css %}{% endblock %}
+  {% block header_custom_js %}{% endblock %}
 </head>
 <body class="w3-light-grey">
 <!--Navigation-->
