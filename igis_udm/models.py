@@ -11,7 +11,7 @@ class SEOitems(models.Model):
 class Place(models.Model):
     name = models.CharField('название', max_length=255, unique=True)
     igis_name = models.CharField(max_length=255, null=True, blank=True)
-    seo = models.ForeignKey(SEOitems, on_delete=models.PROTECT, null=True, blank=True)
+    seo = models.ForeignKey(SEOitems, verbose_name='seo', on_delete=models.PROTECT, null=True, blank=True)
     igis_url = models.URLField(max_length=255, null=True, blank=True)
     slug = models.SlugField(unique=True)
 
@@ -29,7 +29,7 @@ class Place(models.Model):
 class Hospital(models.Model):
     name = models.CharField('название', max_length=255, unique=True)
     igis_name = models.CharField(max_length=255, null=True, blank=True)
-    seo = models.ForeignKey(SEOitems, on_delete=models.PROTECT, null=True, blank=True)
+    seo = models.ForeignKey(SEOitems, verbose_name='seo', on_delete=models.PROTECT, null=True, blank=True)
     igis_url = models.URLField(max_length=255, null=True, blank=True, unique=True)
     igis_obj = models.SmallIntegerField(unique=True)
     place = models.ForeignKey(Place, verbose_name='населенный пункт', on_delete=models.CASCADE)
