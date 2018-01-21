@@ -2,9 +2,16 @@ from django.db import models
 from django.urls import reverse_lazy
 
 
+class SEOitems(models.Model):
+    head_title = models.CharField(max_length=255, unique=True)
+    head_description = models.CharField(max_length=255, unique=True)
+    head_keywords = models.CharField(max_length=255, unique=True)
+
+
 class Place(models.Model):
     name = models.CharField('название', max_length=255, unique=True)
     igis_name = models.CharField(max_length=255, null=True, blank=True)
+    seo = models.ForeignKey(SEOitems, on_delete=models.PROTECT, null=True, blank=True)
     igis_url = models.URLField(max_length=255, null=True, blank=True)
     slug = models.SlugField(unique=True)
 
@@ -22,9 +29,10 @@ class Place(models.Model):
 class Hospital(models.Model):
     name = models.CharField('название', max_length=255, unique=True)
     igis_name = models.CharField(max_length=255, null=True, blank=True)
+    seo = models.ForeignKey(SEOitems, on_delete=models.PROTECT, null=True, blank=True)
     igis_url = models.URLField(max_length=255, null=True, blank=True, unique=True)
     igis_obj = models.SmallIntegerField(unique=True)
-    place = models.ForeignKey(Place, verbose_name='населенный пункт', on_delete=models.CASCADE,)
+    place = models.ForeignKey(Place, verbose_name='населенный пункт', on_delete=models.CASCADE)
     phone = models.CharField('телефон', max_length=100, null=True, blank=True)
     slug = models.SlugField(unique=True, max_length=255)
     address = models.CharField('адрес', max_length=255, null=True, blank=True)
