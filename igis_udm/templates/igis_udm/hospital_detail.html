@@ -1,5 +1,9 @@
 {% extends "igis_udm/base.html" %}
 
+{% block title %}{{ hospital.name }}. Запись к врачу.{% endblock title %}
+{% block meta_keywords %}{{ hospital.name }}, запись к врачу.{% endblock %}
+{% block meta_description %}Удмуртия. {{ hospital.name }}. Запись на прием к врачу.{% endblock meta_description %}
+
 {% block header_custom_css %}
 <style>
 {% include 'igis_udm/modal_img_hospital_detail.css' %}

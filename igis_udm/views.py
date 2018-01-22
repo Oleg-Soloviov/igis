@@ -132,8 +132,6 @@ class HospitalDetailView(DetailView):
             return context
 
 
-
-
 class HospitalLoginFormView(FormView):
     form_class = LoginForm
     template_name = 'igis_udm/hospital_detail.html'
