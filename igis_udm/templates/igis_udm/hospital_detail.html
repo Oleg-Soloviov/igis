@@ -46,6 +46,9 @@
 <div class="w3-row-padding">
     <!-- Left Column -->
     <div class="w3-third">
+        <!-- Top advs block -->
+        {% include 'igis_udm/top_adv_block.html' %}
+        <!-- end of top advs -->
         {% block left_column %}
         <div id="zapisi" class="w3-card-2 w3-white w3-margin-bottom">
             <h3 class="w3-teal w3-container w3-padding-small">
@@ -132,6 +135,9 @@
         </div>
         {% endblock left_column %}
         <!-- End Left Column -->
+        <!-- Bottom advs block -->
+        {% include 'igis_udm/bottom_adv_block.html' %}
+        <!-- end of bottom advs -->
     </div>
 
     <!-- Right Column -->
