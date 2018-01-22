@@ -9,10 +9,12 @@
 
 {% block page_container %}
   <div class="w3-row-padding">
-
     <!-- Left Column -->
     <div class="w3-third">
-{% block left_column %}
+        <!-- Top advs block -->
+        {% include 'igis_udm/top_adv_block.html' %}
+        <!-- end of nop advs -->
+        {% block left_column %}
         <div class="w3-white w3-text-grey w3-card-4 w3-margin-bottom">
             <div class="w3-container">
                 <h4>{{ place.name }}</h4>
@@ -46,8 +48,11 @@
         </form>
         {% endif %}
 
-{% endblock left_column %}
+        {% endblock left_column %}
     <!-- End Left Column -->
+        <!-- Top advs block -->
+        {% include 'igis_udm/top_adv_block.html' %}
+        <!-- end of nop advs -->
     </div>
 
     <!-- Right Column -->

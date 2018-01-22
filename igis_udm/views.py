@@ -1,4 +1,3 @@
-
 import re
 import sys
 import random
@@ -12,7 +11,8 @@ from django.views.generic import TemplateView, DetailView, FormView, View
 from .models import Place, Hospital
 from .forms import *
 from django.core.paginator import Paginator
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
 
 
 class PlaceListView(TemplateView):
@@ -25,6 +25,7 @@ class PlaceListView(TemplateView):
         context['page_obj_1'] = paginator.page(1)
         context['page_obj_2'] = paginator.page(2)
         context['page_obj_3'] = paginator.page(3)
+        context['debug'] = settings.DEBUG
         return context
 
 
@@ -46,6 +47,7 @@ class PlaceDetailView(DetailView):
         context = super(PlaceDetailView, self).get_context_data(**kwargs)
         place_list = Place.objects.all()
         context['place_list'] = place_list
+        context['debug'] = settings.DEBUG
         return context
 
 
@@ -61,6 +63,8 @@ class HospitalDetailView(DetailView):
         context['login_form'] = LoginForm()
         context['place_list'] = Place.objects.all()
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
+
+        context['debug'] = settings.DEBUG
 
         # если существует, то берем уже готовую requests.session, если нет, то создаем новую
         r_session = self.request.session.get('r_session', False)
