@@ -12,7 +12,7 @@
         <div class="w3-white w3-text-grey w3-card-4">
             <ul class="w3-ul">
                 {% for place in page_obj_1 %}
-                <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                <li><a href="{{ place.get_absolute_url }}" title="Запись к врачу. {{ place.name }}.">{{ place.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -21,7 +21,7 @@
         <div class="w3-white w3-text-grey w3-card-4">
             <ul class="w3-ul">
                 {% for place in page_obj_2 %}
-                   <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                   <li><a href="{{ place.get_absolute_url }}"  title="Запись к врачу. {{ place.name }}.">{{ place.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -30,13 +30,13 @@
         <div class="w3-white w3-text-grey w3-card-4">
             <ul class="w3-ul">
                 {% for place in page_obj_3 %}
-                   <li><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                   <li><a href="{{ place.get_absolute_url }}" title="Запись к врачу. {{ place.name }}.">{{ place.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 </div>
 <!-- Top advs block -->
-{% include 'igis_udm/top_adv_block.html' %}
+{% include 'igis_udm/place_list_adv_bottom.html' %}
 <!-- end of nop advs -->
 {% endblock page_container %}

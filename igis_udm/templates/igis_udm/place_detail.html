@@ -1,8 +1,8 @@
 {% extends "igis_udm/base.html" %}
 
 {% block title %}Удмуртия. {{ place.name }}. Выбор медицинского учреждения.{% endblock title %}
-{% block meta_keywords %}Удмуртия, выбор больницы, запись к врачу.{% endblock %}
-{% block meta_description %}Удмуртия. Запись на прием к врачу. Выбор медицинского учреждения.{% endblock meta_description %}
+{% block meta_keywords %}Удмуртия, {{ place.name }}, выбор больницы, запись к врачу.{% endblock %}
+{% block meta_description %}Удмуртия. {{ place.name }}. Запись на прием к врачу. Выбор медицинского учреждения.{% endblock meta_description %}
 
 {% block header_custom_css %}
 {% endblock %}
@@ -61,7 +61,7 @@
       {% for hospital in place.hospital_set.all %}
       <div class="w3-container w3-card-2 w3-white w3-margin-bottom  my_item">
           <div class="w3-container">
-            <h5 class="w3-text-dark-grey my_hospital_name"><a href="{{ hospital.get_absolute_url }}">{{ hospital.name }}</a></h5>
+            <h5 class="w3-text-dark-grey my_hospital_name" title="Запись на прием. {{ place.name }}. {{ hospital.name }}."><a href="{{ hospital.get_absolute_url }}">{{ hospital.name }}</a></h5>
             {% if hospital.phone %}<h6 class="w3-text-teal">&#9742; {{ hospital.phone }}</h6>{% endif %}
             <p class="w3-text-dark-grey">{{ hospital.address }}</p>
           </div>
