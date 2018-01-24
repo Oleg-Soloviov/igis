@@ -29,7 +29,7 @@
                 </form>
                 <ul id="places_list" class="w3-ul">
                     {% for place in place_list %}
-                    <li class="my_city"><a class="search_item" href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
+                    <li class="my_city"><a class="search_item" href="{{ place.get_absolute_url }}"  title="Запись к врачу. {{ place.name }}.">{{ place.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
