@@ -1,5 +1,5 @@
 #person_list > .person_item:nth-child(even) {color:#fff !important; background-color:#006666 !important} /*d2*/
-#person_list > .person_item:nth-child(odd) {color:#fff !important; background-color:#004040 !important}  /*d5*/
+#person_list > .person_item:nth-child(odd) {color:#fff !important; background-color:#004d4d !important}  /*d5*/
 #error_list {display:none;}
 
 .w3-theme-l5 {color:#000 !important; background-color:#e8ffff !important}

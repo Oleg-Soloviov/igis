@@ -173,19 +173,19 @@
                         {% for person in persons %}
                             <div data-id="{{ person.person_id }}" data-fio="{{ person.fio }}" data-speciality="{{ person.speciality }}" class="person_item  w3-border-bottom w3-border-blue">
                                 <div class="w3-row w3-padding person-info">
-                                    <div class="w3-col l6 m6 s12">
+                                    <div class="w3-col l4 m12 s12">
                                         <div class="search_item person_fio">
                                             {{ person.fio }}
                                         </div>
-                                        <div>
-                                            <button class="w3-button w3-border w3-padding-small w3-round nomerki">Номерки</button>
-                                        </div>
                                     </div>
-                                    <div class="w3-col l6 m6 s12">
+                                    <div class="w3-col l6 m12 s12">
                                         <div class="search_item person_speciality">{{ person.speciality }} {% if person.uch %}(Участки: {{ person.uch }}){% endif %}</div>
                                         {% for item in person.info %}
                                             <div class="w3-small">{{ item }}</div>
                                         {% endfor %}
+                                    </div>
+                                    <div class="w3-col l2 m12 s12 w3-center">
+                                        <button class="w3-button w3-border w3-padding-small w3-round nomerki">Номерки</button>
                                     </div>
                                 </div>
                             </div>
