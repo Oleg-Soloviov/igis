@@ -10,10 +10,15 @@
 {% block page_container %}
   <div class="w3-row-padding">
     <!-- Left Column -->
-    <div class="w3-third">
-        <!-- Top advs block -->
-        {% include 'igis_udm/top_adv_block.html' %}
-        <!-- end of top advs -->
+    <div class="w3-col l4 m6 s12">
+        <div class="w3-display-container" style="height:120px;">
+            <div class="w3-display-middle" style="height:100px;width:320px">
+                <!-- Top advs block -->
+                {% include 'igis_udm/top_adv_block.html' %}
+                <!-- end of top advs -->
+            </div>
+        </div>
+
         {% block left_column %}
         <div class="w3-white w3-text-grey w3-card-4 w3-margin-bottom">
             <div class="w3-container">
@@ -43,7 +48,7 @@
         <form class="w3-container w3-card-4 w3-margin-bottom">
             <p>
                 <label class="w3-text-grey">Название или адрес больницы</label>
-                <input oninput="w3.filterHTML('#hospital_list', '.my_item', this.value)" class="w3-input w3-border" type="text">
+                <input oninput="filterHTML('hospital_list', 'my_item', 'my_hospital_name', this.value)" class="w3-input w3-border" type="text">
             </p>
         </form>
         {% endif %}
@@ -53,12 +58,12 @@
     </div>
 
     <!-- Right Column -->
-    <div id="hospital_list" class="w3-twothird">
+    <div id="hospital_list" class="w3-col l8 m6 s12">
 {% block right_column %}
       {% for hospital in place.hospital_set.all %}
       <div class="w3-container w3-card-2 w3-white w3-margin-bottom  my_item">
           <div class="w3-container">
-            <h5 class="w3-text-dark-grey my_hospital_name" title="Запись на прием. {{ place.name }}. {{ hospital.name }}."><a href="{{ hospital.get_absolute_url }}">{{ hospital.name }}</a></h5>
+            <h5 class="w3-text-dark-grey my_hospital_name" title="Запись на прием. {{ place.name }}. {{ hospital.name }}."><a href="{{ hospital.get_absolute_url }}" class="search_item">{{ hospital.name }}</a></h5>
             {% if hospital.phone %}<h6 class="w3-text-teal">&#9742; {{ hospital.phone }}</h6>{% endif %}
             <p class="w3-text-dark-grey">{{ hospital.address }}</p>
           </div>
