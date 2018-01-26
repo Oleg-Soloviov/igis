@@ -68,7 +68,7 @@ class HospitalDetailView(DetailView):
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
 
         cached = cache.get('hospital_context', False)
-        logger.debug('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+        logger.info('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
@@ -143,7 +143,7 @@ class HospitalDetailView(DetailView):
                         persons.append(item)
                 context['persons'] = persons
                 cached['persons'] = persons
-                logger.debug('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY')
+                logger.info('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY')
                 cache.set('hospital_context', cached, 60*60*3)
 
         return context
