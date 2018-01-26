@@ -58,6 +58,7 @@ class HospitalDetailView(DetailView):
     model = Hospital
 
     def get_context_data(self, **kwargs):
+        2/0
         context = super(HospitalDetailView, self).get_context_data(**kwargs)
         self.request.session['igis_obj_id'] = self.object.igis_obj
         medical_cookie = 'medical__{}'.format(self.object.igis_obj)
@@ -68,8 +69,6 @@ class HospitalDetailView(DetailView):
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
 
         cached = cache.get('hospital_context', False)
-        logger.error('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
-        logger.info('111111111111' + str(cached))
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
@@ -144,7 +143,6 @@ class HospitalDetailView(DetailView):
                         persons.append(item)
                 context['persons'] = persons
                 cached['persons'] = persons
-                logger.info('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY' + str(cached))
                 cache.set('hospital_context', cached, 60*60*3)
 
         return context
