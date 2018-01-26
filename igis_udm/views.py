@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from urllib import parse
 import requests
+import logging
 from lxml import html
 from requests.exceptions import Timeout
 from django.core.paginator import Paginator
@@ -13,6 +14,8 @@ from django.core.cache import cache
 from django.views.generic import TemplateView, DetailView, FormView, View
 from .forms import *
 from .models import Place, Hospital
+
+logger = logging.getLogger(__name__)
 
 class PlaceListView(TemplateView):
     template_name = 'igis_udm/place_list.html'
@@ -65,7 +68,7 @@ class HospitalDetailView(DetailView):
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
 
         cached = cache.get('hospital_context', False)
-        print('get cache - ', cached)
+        logger.error('get cache - ', cached)
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
@@ -140,7 +143,7 @@ class HospitalDetailView(DetailView):
                         persons.append(item)
                 context['persons'] = persons
                 cached['persons'] = persons
-                print('set cache - ', cached)
+                logger.error('set cache - ', cached)
                 cache.set('hospital_context', cached, 60*60*3)
 
         return context
