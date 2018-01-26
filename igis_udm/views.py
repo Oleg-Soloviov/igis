@@ -15,7 +15,7 @@ from django.views.generic import TemplateView, DetailView, FormView, View
 from .forms import *
 from .models import Place, Hospital
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
 
 class PlaceListView(TemplateView):
     template_name = 'igis_udm/place_list.html'
