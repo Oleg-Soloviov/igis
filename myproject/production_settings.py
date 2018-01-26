@@ -28,6 +28,14 @@ EMAIL_USE_TLS = True
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse',
+            },
+            'require_debug_true': {
+                '()': 'django.utils.log.RequireDebugTrue',
+            },
+    },
     'handlers': {
         'file': {
             'level': 'DEBUG',
