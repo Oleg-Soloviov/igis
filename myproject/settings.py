@@ -135,3 +135,12 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+ADMINS = [('Oleg', 'osoloviov2000@gmail.com'),]
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = "osoloviov2000@gmail.com"
+# EMAIL_HOST_PASSWORD = "Google_che_che_che_152102"
+# EMAIL_USE_TLS = True
+
+EMAIL_BACKEND = 'myproject.my_email.MailgunEmailBackend'

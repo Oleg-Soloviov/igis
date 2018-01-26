@@ -18,13 +18,6 @@ CACHES = {
     }
 }
 
-ADMINS = [('Oleg', 'osoloviov2000@gmail.com'),]
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "osoloviov2000@gmail.com"
-EMAIL_HOST_PASSWORD = "Oleg152102"
-EMAIL_USE_TLS = True
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
