@@ -18,7 +18,7 @@ CACHES = {
     }
 }
 
-ADMINS = [('Oleg', 'osoloviov@mail.ru'),]
+ADMINS = [('Oleg', 'osoloviov2000@gmail.com'),]
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "osoloviov2000@gmail.com"
@@ -39,7 +39,7 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'DEBUG',
-            'filters': ['require_debug_true'],
+            'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
             'filename': '/home/igis_udm/myproject/myproject/logs/django_debug.log',
         },
