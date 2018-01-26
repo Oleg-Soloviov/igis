@@ -58,7 +58,10 @@ class HospitalDetailView(DetailView):
     model = Hospital
 
     def get_context_data(self, **kwargs):
-        2/0
+        try:
+            2/0
+        except Exception as e:
+            logger.error(e)
         context = super(HospitalDetailView, self).get_context_data(**kwargs)
         self.request.session['igis_obj_id'] = self.object.igis_obj
         medical_cookie = 'medical__{}'.format(self.object.igis_obj)

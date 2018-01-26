@@ -136,7 +136,7 @@ CACHES = {
     }
 }
 
-ADMINS = [('Oleg', 'osoloviov2000@gmail.com'),]
+ADMINS = [('Oleg', 'osoloviov@list.ru'),]
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = "osoloviov2000@gmail.com"
