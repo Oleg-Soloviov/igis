@@ -1,5 +1,4 @@
 import re
-import sys
 import random
 import json
 from datetime import datetime
@@ -7,13 +6,13 @@ from urllib import parse
 import requests
 from lxml import html
 from requests.exceptions import Timeout
-from django.views.generic import TemplateView, DetailView, FormView, View
-from .models import Place, Hospital
-from .forms import *
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
-
+from django.core.cache import cache
+from django.views.generic import TemplateView, DetailView, FormView, View
+from .forms import *
+from .models import Place, Hospital
 
 class PlaceListView(TemplateView):
     template_name = 'igis_udm/place_list.html'
@@ -56,84 +55,95 @@ class HospitalDetailView(DetailView):
     model = Hospital
 
     def get_context_data(self, **kwargs):
+        context = super(HospitalDetailView, self).get_context_data(**kwargs)
         self.request.session['igis_obj_id'] = self.object.igis_obj
         medical_cookie = 'medical__{}'.format(self.object.igis_obj)
         persons = []
-        context = super(HospitalDetailView, self).get_context_data(**kwargs)
         context['login_form'] = LoginForm()
         context['place_list'] = Place.objects.all()
+        context['debug'] = settings.DEBUG
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
 
-        context['debug'] = settings.DEBUG
-
-        # если существует, то берем уже готовую requests.session, если нет, то создаем новую
-        r_session = self.request.session.get('r_session', False)
-        if not r_session:
-            r_session = requests.Session()
-        try:
-            r = r_session.get(url, timeout=(1.5, 25))
-        except Timeout:
-            context['error'] = True
-        except Exception as e:
-            context['error'] = True
-            print(e)
+        cached = cache.get('hospital_context', False)
+        print('get cache - ', cached)
+        if cached:
+            context['sign_items'] = cached['sign_items']
+            context['persons'] = cached['persons']
         else:
-            self.request.session['r_session'] = r_session
-            if r_session.cookies.get(medical_cookie, '+') != '+':
-                my_user = r_session.cookies.get(medical_cookie)
-                my_user = json.loads(parse.unquote(my_user))
-                context['user'] = my_user
-                self.request.session['user'] = my_user
+            # если существует, то берем уже готовую requests.session, если нет, то создаем новую
+            r_session = self.request.session.get('r_session', False)
+            if not r_session:
+                r_session = requests.Session()
+            try:
+                r = r_session.get(url, timeout=(1.5, 25))
+            except Timeout:
+                context['error'] = True
+            except Exception as e:
+                context['error'] = True
+                print(e)
             else:
-                context['user'] = False
-                self.request.session['user'] = False
-            context['sign_items'] = self.request.session.get('sign_items', False)
-            doc = html.document_fromstring(r.text)
-            rows = doc.xpath('//table[@id="medlist"]/tr')
-            for row in rows:
-                if row.xpath('contains(@class, "table-border-light")'):
-                    speciality = row.text_content()
-                    continue
-                elif row.xpath('./td[@colspan= "7"]'):
-                    item = {}
-                    item['speciality'] = speciality
-                    item['fio'] = row.xpath('./td/div/div/a[1]')[0].text_content()
-                    foo = row.xpath('./td/div/div/a[1]/@href')[0]
-                    m = re.search(r'id=([\d]+)', foo)
-                    item['person_id'] = m.group(1)
-                    if row.xpath('./td/div/small'):
-                        # item['info'] = row.xpath('./td/div/small')[0].text_content()
-                        foo = row.xpath('./td/div/small/text()')
-                        item['info'] = []
-                        for txt in foo:
-                            if 'Участки:' in txt:
-                                m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
-                                if m:
-                                    item['uch'] = m.group(1)
-                            if 'Ограничение на запись через ИГИС:' in txt:
-                                m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
-                                if 'Ограничений нет' in m.group(1):
-                                    continue
+                cached = {}
+                self.request.session['r_session'] = r_session
+                if r_session.cookies.get(medical_cookie, '+') != '+':
+                    my_user = r_session.cookies.get(medical_cookie)
+                    my_user = json.loads(parse.unquote(my_user))
+                    context['user'] = my_user
+                    self.request.session['user'] = my_user
+                else:
+                    context['user'] = False
+                    self.request.session['user'] = False
+                sign_items = self.request.session.get('sign_items', False)
+                context['sign_items'] = sign_items
+                cached['sign_items'] = sign_items
+                doc = html.document_fromstring(r.text)
+                rows = doc.xpath('//table[@id="medlist"]/tr')
+                for row in rows:
+                    if row.xpath('contains(@class, "table-border-light")'):
+                        speciality = row.text_content()
+                        continue
+                    elif row.xpath('./td[@colspan= "7"]'):
+                        item = {}
+                        item['speciality'] = speciality
+                        item['fio'] = row.xpath('./td/div/div/a[1]')[0].text_content()
+                        foo = row.xpath('./td/div/div/a[1]/@href')[0]
+                        m = re.search(r'id=([\d]+)', foo)
+                        item['person_id'] = m.group(1)
+                        if row.xpath('./td/div/small'):
+                            # item['info'] = row.xpath('./td/div/small')[0].text_content()
+                            foo = row.xpath('./td/div/small/text()')
+                            item['info'] = []
+                            for txt in foo:
+                                if 'Участки:' in txt:
+                                    m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
+                                    if m:
+                                        item['uch'] = m.group(1)
+                                if 'Ограничение на запись через ИГИС:' in txt:
+                                    m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
+                                    if 'Ограничений нет' in m.group(1):
+                                        continue
+                                    else:
+                                        item['info'].append(m.group(1))
                                 else:
-                                    item['info'].append(m.group(1))
-                            else:
-                                item['info'].append(txt)
+                                    item['info'].append(txt)
 
-                    else:
-                        item['info'] = ''
-                    foo = row.text_content()
-                    if 'Номерков нет' in foo:
-                        item['col_n'] = ''
-                    else:
-                        m = re.search(r'Номерков - ([\d]+)', foo)
-                        if m:
-                            item['col_n'] = m.group(1)  # количество номерков
                         else:
+                            item['info'] = ''
+                        foo = row.text_content()
+                        if 'Номерков нет' in foo:
                             item['col_n'] = ''
-                    persons.append(item)
-            context['persons'] = persons
-        finally:
-            return context
+                        else:
+                            m = re.search(r'Номерков - ([\d]+)', foo)
+                            if m:
+                                item['col_n'] = m.group(1)  # количество номерков
+                            else:
+                                item['col_n'] = ''
+                        persons.append(item)
+                context['persons'] = persons
+                cached['persons'] = persons
+                print('set cache - ', cached)
+                cache.set('hospital_context', cached, 60*60*3)
+
+        return context
 
 
 class HospitalLoginFormView(FormView):
