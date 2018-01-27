@@ -71,7 +71,9 @@ class HospitalDetailView(DetailView):
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
+            logger.debug('get cache')
         else:
+            logger.debug('without cache')
             # если существует, то берем уже готовую requests.session, если нет, то создаем новую
             r_session = self.request.session.get('r_session', False)
             if not r_session:
@@ -85,15 +87,7 @@ class HospitalDetailView(DetailView):
                 print(e)
             else:
                 cached = {}
-                self.request.session['r_session'] = r_session
-                if r_session.cookies.get(medical_cookie, '+') != '+':
-                    my_user = r_session.cookies.get(medical_cookie)
-                    my_user = json.loads(parse.unquote(my_user))
-                    context['user'] = my_user
-                    self.request.session['user'] = my_user
-                else:
-                    context['user'] = False
-                    self.request.session['user'] = False
+
                 sign_items = self.request.session.get('sign_items', False)
                 context['sign_items'] = sign_items
                 cached['sign_items'] = sign_items
@@ -144,6 +138,15 @@ class HospitalDetailView(DetailView):
                 cached['persons'] = persons
                 cache.set(str(self.object.igis_obj), cached, 60*60*3)
 
+            self.request.session['r_session'] = r_session
+            if r_session.cookies.get(medical_cookie, '+') != '+':
+                my_user = r_session.cookies.get(medical_cookie)
+                my_user = json.loads(parse.unquote(my_user))
+                context['user'] = my_user
+                self.request.session['user'] = my_user
+            else:
+                context['user'] = False
+                self.request.session['user'] = False
 
         return context
 
