@@ -31,7 +31,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
             'filename': '/home/igis_udm/myproject/myproject/logs/django_debug.log',
