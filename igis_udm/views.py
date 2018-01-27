@@ -144,6 +144,7 @@ class HospitalDetailView(DetailView):
                 cached['persons'] = persons
                 cache.set(str(self.object.igis_obj), cached, 60*60*3)
 
+
         return context
 
 
