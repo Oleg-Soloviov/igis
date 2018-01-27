@@ -114,6 +114,8 @@ class HospitalDetailView(DetailView):
                                     m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
                                     if m:
                                         item['uch'] = m.group(1)
+                                    else:
+                                        item['uch'] = False
                                 if 'Ограничение на запись через ИГИС:' in txt:
                                     m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
                                     if 'Ограничений нет' in m.group(1):
