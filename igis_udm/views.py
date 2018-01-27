@@ -71,13 +71,7 @@ class HospitalDetailView(DetailView):
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
-            logger.info('info: cache exists -> '+cached)
-            logger.error('error: cache exists -> '+cached)
         else:
-            logger.info('info: cache does not exist')
-            logger.error('error: cache does not exist')
-            cache.set('hospital_context', 'XXXXXXXXXXXX', 180)
-            logger.info('info2: ' + cache.get('hospital_context', 'False'))
             # если существует, то берем уже готовую requests.session, если нет, то создаем новую
             r_session = self.request.session.get('r_session', False)
             if not r_session:
