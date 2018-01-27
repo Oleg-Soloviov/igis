@@ -17,13 +17,13 @@
 <div class="w3-bar w3-teal">
   <div class="w3-right w3-padding">
     <span class="w3-bar-item">ФИО:</span>
-    <span id="patient_fio" class="w3-bar-item">{% if user %}{{ user.f }} {{ user.i }} {{ user.o }}{% else %}НЕ АВТОРИЗОВАН{% endif %}</span>
-    {% if user %}
+    <span id="patient_fio" class="w3-bar-item">{% if my_user %}{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}{% else %}НЕ АВТОРИЗОВАН{% endif %}</span>
+    {% if my_user %}
     <div id="patient_info" class="w3-dropdown-hover w3-bar-item">(инфо)
         <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
         <div class="w3-container">
-            <p id="uch_ther">Терапевтический участок: {{ user.uch }}</p>
-            <p id="uch_gin"{% if not user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ user.guch }}</p>
+            <p id="uch_ther">Терапевтический участок: {{ my_user.uch }}</p>
+            <p id="uch_gin"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</p>
         </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
         </div>
     </div>
     {% endif %}
-    <button id="login_button" class="w3-bar-item w3-button w3-theme-d1 w3-border ew3-border-red w3-round-large">{% if user %}Выйти{% else %}Авторизация{% endif %}</button>
+    <button id="login_button" class="w3-bar-item w3-button w3-theme-d1 w3-border ew3-border-red w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>
   </div>
 </div>
 {% endblock page_navigation %}

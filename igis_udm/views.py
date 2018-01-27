@@ -145,11 +145,11 @@ class HospitalDetailView(DetailView):
             if r_session.cookies.get(medical_cookie, '+') != '+':
                 my_user = r_session.cookies.get(medical_cookie)
                 my_user = json.loads(parse.unquote(my_user))
-                context['user'] = my_user
-                self.request.session['user'] = my_user
+                context['my_user'] = my_user
+                self.request.session['my_user'] = my_user
             else:
-                context['user'] = False
-                self.request.session['user'] = False
+                context['my_user'] = False
+                self.request.session['my_user'] = False
 
         return context
 
@@ -188,7 +188,7 @@ class HospitalLoginFormView(FormView):
             doc = html.document_fromstring(r.text)
             print(r.text)
             if r_session.cookies.get(medical_cookie, '+') == '+':
-                self.request.session['user'] = False
+                self.request.session['my_user'] = False
                 data['status'] = 'error'
                 mistake = doc.xpath('//font[@color="red"]')
                 if mistake:
@@ -204,7 +204,7 @@ class HospitalLoginFormView(FormView):
                     # перейдем на страницу больницы, чтобы получить данные о записях пациента
                     data['status'] = 'authorized'
                     data['info'] = r_session.cookies.get(medical_cookie, 'Unknown error')
-                    self.request.session['user'] = r_session.cookies.get(medical_cookie, False)
+                    self.request.session['my_user'] = r_session.cookies.get(medical_cookie, False)
                     url = 'http://igis.ru/online'
                     params = {'obj': self.request.session['igis_obj_id']}
                     try:
@@ -282,7 +282,7 @@ class HospitalLogOutFormView(View):
             data['status'] = 'logout'
             if 'sign_items' in self.request.session:
                 del self.request.session['sign_items']
-            del self.request.session['user']
+            del self.request.session['my_user']
             return JsonResponse(data, status=200, safe=False)
         else:
             data['status'] = 'error'
@@ -488,8 +488,8 @@ class SignInFormView(FormView):
             return JsonResponse(data, status=200, safe=False)
 
         self.request.session['r_session'] = r_session
-        if self.request.session.get('user', False):
-            data['info'] = self.request.session.get('user', False)
+        if self.request.session.get('my_user', False):
+            data['info'] = self.request.session.get('my_user', False)
         else:
             data['status'] = 'logout'
             return JsonResponse(data, status=200, safe=False)
