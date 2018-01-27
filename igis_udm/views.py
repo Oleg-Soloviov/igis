@@ -66,6 +66,7 @@ class HospitalDetailView(DetailView):
         context['place_list'] = Place.objects.all()
         context['debug'] = settings.DEBUG
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
+        r_session = self.request.session.get('r_session', False)
 
         cached = cache.get(str(self.object.igis_obj), False)
         if cached:
@@ -75,7 +76,6 @@ class HospitalDetailView(DetailView):
         else:
             logger.debug('without cache')
             # если существует, то берем уже готовую requests.session, если нет, то создаем новую
-            r_session = self.request.session.get('r_session', False)
             if not r_session:
                 r_session = requests.Session()
             try:
