@@ -72,6 +72,7 @@ class HospitalDetailView(DetailView):
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
+            context['failure'] = False
             logger.debug('get cache')
         else:
             logger.debug('without cache')
