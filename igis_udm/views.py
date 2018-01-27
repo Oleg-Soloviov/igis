@@ -109,13 +109,12 @@ class HospitalDetailView(DetailView):
                             # item['info'] = row.xpath('./td/div/small')[0].text_content()
                             foo = row.xpath('./td/div/small/text()')
                             item['info'] = []
+                            item['uch'] = False
                             for txt in foo:
                                 if 'Участки:' in txt:
                                     m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
                                     if m:
                                         item['uch'] = m.group(1)
-                                    else:
-                                        item['uch'] = False
                                 if 'Ограничение на запись через ИГИС:' in txt:
                                     m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
                                     if 'Ограничений нет' in m.group(1):
