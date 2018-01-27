@@ -66,6 +66,7 @@ class HospitalDetailView(DetailView):
         context['place_list'] = Place.objects.all()
         context['debug'] = settings.DEBUG
         context['failure'] = False
+        context['error'] = False
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
         r_session = self.request.session.get('r_session', False)
 
