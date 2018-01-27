@@ -58,10 +58,6 @@ class HospitalDetailView(DetailView):
     model = Hospital
 
     def get_context_data(self, **kwargs):
-        try:
-            2/0
-        except Exception as e:
-            logger.error(e)
         context = super(HospitalDetailView, self).get_context_data(**kwargs)
         self.request.session['igis_obj_id'] = self.object.igis_obj
         medical_cookie = 'medical__{}'.format(self.object.igis_obj)
@@ -73,9 +69,14 @@ class HospitalDetailView(DetailView):
 
         cached = cache.get('hospital_context', False)
         if cached:
-            context['sign_items'] = cached['sign_items']
-            context['persons'] = cached['persons']
+            # context['sign_items'] = cached['sign_items']
+            # context['persons'] = cached['persons']
+            logger.info('info: cache exists -> '+cached)
+            logger.error('error: cache exists -> '+cached)
         else:
+            logger.info('info: cache does not exist')
+            logger.error('error: cache does not exist')
+            cache.set('hospital_context', cached, 180)
             # если существует, то берем уже готовую requests.session, если нет, то создаем новую
             r_session = self.request.session.get('r_session', False)
             if not r_session:
@@ -146,7 +147,7 @@ class HospitalDetailView(DetailView):
                         persons.append(item)
                 context['persons'] = persons
                 cached['persons'] = persons
-                cache.set('hospital_context', cached, 60*60*3)
+                # cache.set('hospital_context', cached, 60*60*3)
 
         return context
 
