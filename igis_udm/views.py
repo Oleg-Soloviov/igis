@@ -67,10 +67,10 @@ class HospitalDetailView(DetailView):
         context['debug'] = settings.DEBUG
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
 
-        cached = cache.get('hospital_context', 'False')
-        if cached == 'False':
-            # context['sign_items'] = cached['sign_items']
-            # context['persons'] = cached['persons']
+        cached = cache.get('hospital_context', False)
+        if cached:
+            context['sign_items'] = cached['sign_items']
+            context['persons'] = cached['persons']
             logger.info('info: cache exists -> '+cached)
             logger.error('error: cache exists -> '+cached)
         else:
