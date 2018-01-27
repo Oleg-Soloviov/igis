@@ -67,8 +67,8 @@ class HospitalDetailView(DetailView):
         context['debug'] = settings.DEBUG
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
 
-        cached = cache.get('hospital_context', False)
-        if cached:
+        cached = cache.get('hospital_context', 'False')
+        if cached == 'False':
             # context['sign_items'] = cached['sign_items']
             # context['persons'] = cached['persons']
             logger.info('info: cache exists -> '+cached)
@@ -76,7 +76,8 @@ class HospitalDetailView(DetailView):
         else:
             logger.info('info: cache does not exist')
             logger.error('error: cache does not exist')
-            cache.set('hospital_context', cached, 180)
+            cache.set('hospital_context', 'XXXXXXXXXXXX', 180)
+            logger.info('info2: ' + cache.get('hospital_context', 'False'))
             # если существует, то берем уже готовую requests.session, если нет, то создаем новую
             r_session = self.request.session.get('r_session', False)
             if not r_session:
