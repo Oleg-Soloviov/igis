@@ -350,7 +350,7 @@ function get_ajax_time(evt) {
     var button = this;
     button.disabled = true;
     button.style.cursor = 'wait'
-    var parent_li = button.parentElement.parentElement.parentElement.parentElement
+    var parent_li = button.parentElement.parentElement.parentElement
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         myPersonsObj = JSON.parse(this.responseText);
