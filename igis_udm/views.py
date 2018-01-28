@@ -67,6 +67,12 @@ class HospitalDetailView(DetailView):
         context['debug'] = settings.DEBUG
         context['failure'] = False
         context['error'] = False
+
+        my_user = self.request.session.get('my_user', False)
+        if my_user:
+            my_user = json.loads(parse.unquote(my_user))
+        context['my_user'] = my_user
+
         url = 'http://igis.ru/online?obj={}&page=rasp'.format(self.object.igis_obj)
         r_session = self.request.session.get('r_session', False)
 
@@ -100,7 +106,7 @@ class HospitalDetailView(DetailView):
                         speciality = row.text_content()
                         continue
                     elif row.xpath('./td[@colspan= "7"]'):
-                        item = {}
+                        item = dict()
                         item['speciality'] = speciality
                         item['fio'] = row.xpath('./td/div/div/a[1]')[0].text_content()
                         foo = row.xpath('./td/div/div/a[1]/@href')[0]
@@ -142,12 +148,6 @@ class HospitalDetailView(DetailView):
                 cache.set(str(self.object.igis_obj), cached, 60*60*3)
 
             self.request.session['r_session'] = r_session
-
-            my_user = self.request.session.get('my_user', False)
-            if my_user:
-                my_user = json.loads(parse.unquote(my_user))
-            context['my_user'] = my_user
-
             # if r_session.cookies.get(medical_cookie, '+') != '+':
             #     my_user = r_session.cookies.get(medical_cookie)
             #     my_user = json.loads(parse.unquote(my_user))
@@ -156,7 +156,6 @@ class HospitalDetailView(DetailView):
             # else:
             #     context['my_user'] = False
             #     self.request.session['my_user'] = False
-
         return context
 
 
