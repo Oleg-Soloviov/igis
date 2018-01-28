@@ -74,9 +74,9 @@ class HospitalDetailView(DetailView):
         if cached:
             context['sign_items'] = cached['sign_items']
             context['persons'] = cached['persons']
-            logger.debug('\n\n\nget cache\n\n\n')
+            logger.debug('get cache')
         else:
-            logger.debug('\n\n\nwithout cache \n\n\n')
+            logger.debug('without cache')
             # если существует, то берем уже готовую requests.session, если нет, то создаем новую
             if not r_session:
                 r_session = requests.Session()
@@ -142,14 +142,20 @@ class HospitalDetailView(DetailView):
                 cache.set(str(self.object.igis_obj), cached, 60*60*3)
 
             self.request.session['r_session'] = r_session
-            if r_session.cookies.get(medical_cookie, '+') != '+':
-                my_user = r_session.cookies.get(medical_cookie)
+
+            my_user = self.request.session.get('my_user', False)
+            if my_user:
                 my_user = json.loads(parse.unquote(my_user))
-                context['my_user'] = my_user
-                self.request.session['my_user'] = my_user
-            else:
-                context['my_user'] = False
-                self.request.session['my_user'] = False
+            context['my_user'] = my_user
+
+            # if r_session.cookies.get(medical_cookie, '+') != '+':
+            #     my_user = r_session.cookies.get(medical_cookie)
+            #     my_user = json.loads(parse.unquote(my_user))
+            #     context['my_user'] = my_user
+            #     self.request.session['my_user'] = my_user
+            # else:
+            #     context['my_user'] = False
+            #     self.request.session['my_user'] = False
 
         return context
 
@@ -186,7 +192,6 @@ class HospitalLoginFormView(FormView):
         else:
             self.request.session['r_session'] = r_session
             doc = html.document_fromstring(r.text)
-            print(r.text)
             if r_session.cookies.get(medical_cookie, '+') == '+':
                 self.request.session['my_user'] = False
                 data['status'] = 'error'
@@ -204,6 +209,11 @@ class HospitalLoginFormView(FormView):
                     # перейдем на страницу больницы, чтобы получить данные о записях пациента
                     data['status'] = 'authorized'
                     data['info'] = r_session.cookies.get(medical_cookie, 'Unknown error')
+
+                    my_user = r_session.cookies.get(medical_cookie)
+                    # my_user = json.loads(parse.unquote(my_user))
+                    self.request.session['my_user'] = my_user
+
                     self.request.session['my_user'] = r_session.cookies.get(medical_cookie, False)
                     url = 'http://igis.ru/online'
                     params = {'obj': self.request.session['igis_obj_id']}
@@ -212,7 +222,6 @@ class HospitalLoginFormView(FormView):
                     except Timeout:
                         data['error'] = 'failed_signs'
                         data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
-                        print(data)
                     except Exception as e:
                         data['error'] = 'failed_signs'
                         data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
@@ -274,10 +283,8 @@ class HospitalLogOutFormView(View):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        print('2 cookies:', r_session.cookies)
         r = r_session.get('http://igis.ru/online', params=params)
         self.request.session['r_session'] = r_session
-        print('Out 1 cookies', r_session.cookies)
         if r.ok:
             data['status'] = 'logout'
             if 'sign_items' in self.request.session:
@@ -445,7 +452,6 @@ class HospitalGetPersonTime(View):
                     for div in divs:
                         time_links = div.xpath('a[@class="btn green"]')
                         sign_date = div.xpath('h2')[0].text_content()
-                        print(sign_date)
                         m = re.search(r'[\d]{2}.[\d]{2}.[\d]{4}', sign_date)
                         foo_date = m.group(0)
                         foo_date = datetime.strptime(foo_date, '%d.%m.%Y')
@@ -459,7 +465,6 @@ class HospitalGetPersonTime(View):
             return JsonResponse(data, status=200, safe=False)
         else:
             data = form.errors.as_json()
-            print(data)
             return HttpResponse(data, content_type='application/json')
 
 
@@ -493,8 +498,6 @@ class SignInFormView(FormView):
         else:
             data['status'] = 'logout'
             return JsonResponse(data, status=200, safe=False)
-
-        print(r.text)
 
         if r.ok and ("Вы успешно записаны на прием" in r.text):
             url = 'http://igis.ru/online/'
@@ -530,7 +533,6 @@ class SignInFormView(FormView):
                     if m:
                         i['sign_specialist_name'] = m.group(1)
                     m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
-                    print(m)
                     if m:
                         i['sign_specialist_role'] = m.group(1)
                     m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
@@ -560,7 +562,6 @@ class SignInFormView(FormView):
         else:
             data['status'] = 'error'
             data['failure'] = r.text
-            print(r.text)
             return JsonResponse(data, status=200, safe=False)
 
     def form_invalid(self, form):
@@ -589,7 +590,6 @@ class SignOutFormView(FormView):
         r = r_session.get(url, params=params, timeout=(1.5, 15))
         self.request.session['r_session'] = r_session
 
-        print(r.text)
         if r.ok and ('Ваша запись успешно отменена' in r.text):
             data['status'] = 'signout'
             url = 'http://igis.ru/online'
@@ -608,7 +608,6 @@ class SignOutFormView(FormView):
                     if m:
                         i['sign_specialist_name'] = m.group(1)
                     m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
-                    print(m)
                     if m:
                         i['sign_specialist_role'] = m.group(1)
                     m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
@@ -641,6 +640,5 @@ class SignOutFormView(FormView):
 
     def form_invalid(self, form):
         data = {}
-        print('Ошибка в форме выписки')
         data['status'] = 'error'
         return JsonResponse(data, status=200, safe=False)
