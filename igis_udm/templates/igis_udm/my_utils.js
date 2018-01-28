@@ -2,7 +2,7 @@ var full_months = ['января', 'февраля', 'марта', 'апреля
 var full_week_days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 
 function hide_nomerki() {
-    var parent_li = this.parentElement.parentElement.parentElement.parentElement;
+    var parent_li = this.parentElement.parentElement.parentElement;
     var hide_rows = parent_li.getElementsByClassName('w3-border-top');
     hide_rows = Array.prototype.slice.call(hide_rows);
     var rows_length = hide_rows.length
@@ -12,6 +12,7 @@ function hide_nomerki() {
     }
     this.removeEventListener('click', hide_nomerki);
     this.addEventListener('click', get_ajax_time);
+    this.innerHTML = 'Номерки';
 }
 
 function show_auth_form(){
