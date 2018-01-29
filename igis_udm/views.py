@@ -125,7 +125,7 @@ class HospitalDetailView(DetailView):
                                     m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
                                     if 'Ограничений нет' in m.group(1):
                                         continue
-                                    elif 'нет' in m.group(1):
+                                    elif 'Ограничение на запись через ИГИС: нет' in txt:
                                         continue
                                     else:
                                         item['info'].append(m.group(1))
