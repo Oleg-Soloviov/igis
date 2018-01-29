@@ -95,7 +95,6 @@ class HospitalDetailView(DetailView):
                 print(e)
             else:
                 cached = {}
-
                 sign_items = self.request.session.get('sign_items', False)
                 context['sign_items'] = sign_items
                 cached['sign_items'] = sign_items
@@ -125,6 +124,8 @@ class HospitalDetailView(DetailView):
                                 if 'Ограничение на запись через ИГИС:' in txt:
                                     m = re.search(r'Ограничение на запись через ИГИС:(.*)', txt)
                                     if 'Ограничений нет' in m.group(1):
+                                        continue
+                                    elif 'нет' in m.group(1):
                                         continue
                                     else:
                                         item['info'].append(m.group(1))
