@@ -118,7 +118,7 @@ class HospitalDetailView(DetailView):
                             item['uch'] = False
                             for txt in foo:
                                 if 'Участки:' in txt:
-                                    m = re.search(r'Участки:[\s]+([\d\,\s]+);', txt)
+                                    m = re.search(r'Участки:[\s]+([\d,\s]+);', txt)
                                     if m:
                                         item['uch'] = m.group(1)
                                 if 'Ограничение на запись через ИГИС:' in txt:
