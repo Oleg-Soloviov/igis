@@ -89,7 +89,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container befor_auth">
+        <div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container">
             <h6 class="w3-text-grey w3-padding-small"><a href="{{ hospital.place.get_absolute_url }}">{{ hospital.place.name }}</a></h6>
             <h5 class="w3-text-grey w3-padding-small">{{ hospital.name }}</h5>
             <button class="w3-button w3-block w3-teal w3-margin-bottom w3-left-align w3-round" onclick="toggle_class('hospital_info', 'w3-hide')">Детали <span class="w3-hide-small">(адрес, телефон, сайт)</span></button>
@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>
-        <div class="w3-container w3-card-2 w3-white befor_auth">
+        <div class="w3-container w3-card-2 w3-white">
             <p>
                 <button onclick="toggle_class('cities_list','w3-hide')" class="w3-button w3-block w3-left-align w3-teal w3-round">Выбрать город или район</button>
             </p>
@@ -134,9 +134,9 @@
                 </ul>
             </div>
         </div>
-        <div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container w3-hide after_auth">
-            <h1>after_auth</h1>
-        </div>
+        <!--<div class="w3-container w3-card-2 w3-white w3-margin-bottom  w3-display-container w3-hide after_auth">-->
+            <!--<h1>after_auth</h1>-->
+        <!--</div>-->
         {% endblock left_column %}
         <!-- End Left Column -->
     </div>
