@@ -305,11 +305,14 @@ function show_schedule_time(parent_li, myPersonsObj, button) {
 }
 
 
+// запись к специалисту
 function sign_person_in() {
     var xhttp = new XMLHttpRequest();
     var auth_form = document.forms['login'];
     var overlay = document.getElementById('signin_modal_container');
     var overlay_content = document.getElementById('signin_modal_content');
+    var overlay_error_container = document.getElementById('signin_error_container');
+    var overlay_error_content = document.getElementById('signin_error_content');
 
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -317,16 +320,17 @@ function sign_person_in() {
         dObj = myObj; // for debug
         if ((myObj.status == 'sign') && myObj.sign_items){
             update_zapisy(myObj.sign_items)
+            overlay.style.display = 'none';
+            // очистим last_alarm
+            document.getElementById('signin_fio').innerHTML = '';
+            document.getElementById('signin_speciality').innerHTML = '';
+            document.getElementById('signin_date').innerHTML = '';
+            document.getElementById('signin_time').innerHTML = '';
         }
         else {
-            alert(myObj.failure)
+            overlay_error_container.style.display = 'block';
+            overlay_error_content.innerHTML = myObj.failure;
         }
-        overlay.style.display = 'none';
-        // очистим last_alarm
-        document.getElementById('signin_fio').innerHTML = '';
-        document.getElementById('signin_speciality').innerHTML = '';
-        document.getElementById('signin_date').innerHTML = '';
-        document.getElementById('signin_time').innerHTML = '';
 
       }
       else if (this.readyState == 4 && this.status != 200) {
@@ -398,7 +402,7 @@ function sign_out(el) {
         var myObj = JSON.parse(this.responseText);
         dObj = myObj; //for debug
         if (myObj.status == 'signout'){
-            update_zapisy(myObj.sign_items.length)
+            update_zapisy(myObj.sign_items)
             } else {
                 document.getElementById('zapisi_net').style.display = 'block';
                 document.getElementById('zapisi_items').style.display = 'none';

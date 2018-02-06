@@ -251,6 +251,9 @@
 <div id="signin_modal_container" class="w3-modal">
     <div id="signin_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom w3-round-xlarge w3-theme-d2 w3-border-lightgrey w3-border" style="max-width:600px">
         <div class="w3-container w3-cell-row">
+            <div id="signin_error_container" class="w3-cell-row w3-border-bottom w3-border-theme" style="display:none;">
+                    <div id="signin_error_content" class="w3-panel w3-red w3-round"></div>
+            </div>
             <div class="w3-cell-row w3-border-bottom w3-border-theme">
                 <div class="w3-cell w3-cell-middle" style="width:50%">
                     <div>СПЕЦИАЛЬНОСТЬ</div>
@@ -297,7 +300,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <div id="info_modal_container" class="w3-modal" {% if error %}style="display:block"{% endif %}>
     <div id="signin_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom w3-round-xlarge w3-red w3-border-lightgrey w3-border" style="max-width:600px">

@@ -504,25 +504,9 @@ class SignInFormView(FormView):
             params = {'obj': self.request.session['igis_obj_id']}
             r = r_session.get(url, params=params, timeout=(1.5, 15))
             self.request.session['r_session'] = r_session
-
-            # doc = html.document_fromstring(r.text)
-            # x_el  = doc.xpath('//*[contains(text(), "Информация о ваших записях")]')[0]
-            # p_el = x_el.getparent()
-            # sign_el = p_el.getnext()
-            # sing_info = sign_el.text_content()
-            # m = re.search(r'Ф.И.О: ([\w ]+) Дата', sing_info)
-            # if m:
-            #     data['sign_specialist_name'] = m.group(1)
-            # m = re.search(r'Специальность:\s*([\w .]+)\s*Ф.И.О', sing_info)
-            # if m:
-            #     data['sign_specialist_role'] = m.group(1)
-            # m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4} [0-9]{1,2}:[0-9]{2})', sing_info)
-            # if m:
-            #     data['sign_date_time'] = m.group(1)
-            # data['status'] = 'sign'
-
             doc = html.document_fromstring(r.text)
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
+            print('raw_items -- ', sign_items)
             if sign_items:
                 data['sign_items'] = []
                 data['status'] = 'sign'
@@ -558,10 +542,16 @@ class SignInFormView(FormView):
                     data['sign_items'].append(i)
 
                 self.request.session['sign_items'] = data['sign_items']
+                print('readdy items -- ', data['sign_items'])
+            return JsonResponse(data, status=200, safe=False)
+        elif r.ok and ("ожидайте ответа больницы" in r.text):
+            data['status'] = 'error'
+            data['failure'] = 'Сервер больницы не отвечает.'
             return JsonResponse(data, status=200, safe=False)
         else:
             data['status'] = 'error'
-            data['failure'] = r.text
+            data['failure'] = 'Сервер больницы не отвечает.'
+            print('signin errorr -- ', r.text)
             return JsonResponse(data, status=200, safe=False)
 
     def form_invalid(self, form):
