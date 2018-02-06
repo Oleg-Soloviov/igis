@@ -146,28 +146,18 @@
     <div class="w3-col l8 m6 s12">
         <div class="w3-white w3-text-grey w3-card-4">
             <div>
-                <div class="w3-row">
-                    <div class="w3-half">
-                        <form>
-                            <p class=" w3-padding">
-                                <input oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)" class="w3-input w3-border">
-                            </p>
-                        </form>
-                    </div>
-                    <div class="w3-half">
-                        <p class="w3-padding-16">
-                            <label class="w3-text-grey">Фильтр по фамилии или специальности</label>
-                        </p>
-                    </div>
-                </div>
                 <div>
-                    <div class="w3-row w3-padding w3-teal">
-                        <div class="w3-third" onclick="sortHTML('person_list', '.person_item', '.person_fio')" style="cursor:pointer">
-                            Ф.И.О.&nbsp;&#8645;
+                    <div class="w3-cell-row w3-teal">
+                        <div class="w3-container w3-cell w3-cell-middle w3-hide-small" onclick="sortHTML('person_list', '.person_item', '.person_fio')" style="cursor:pointer">
+                            <p>Ф.И.О.&nbsp;&#8645;</p>
                         </div>
-                        <div class="w3-twothird" onclick="sortHTML('person_list', '.person_item', '.person_speciality')" style="cursor:pointer">
-                            Специальность&nbsp;&#8645;
+                        <div class="w3-container w3-cell w3-cell-middle  w3-hide-small" onclick="sortHTML('person_list', '.person_item', '.person_speciality')" style="cursor:pointer">
+                            <p>Специальность&nbsp;&#8645;</p>
                         </div>
+                        <form class="w3-container w3-cell w3-cell-middle">
+                            <input oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)"
+                                   class="w3-input w3-border w3-round" placeholder="Фамилия или специальность">
+                        </form>
                     </div>
                     <div id="person_list">
                         {% for person in persons %}
@@ -192,7 +182,6 @@
                         {% endfor %}
                     </div>
                 </div>
-                <br>
             </div>
         </div>
     </div>
