@@ -149,13 +149,13 @@
                 <div>
                     <div class="w3-row w3-teal">
                         <div class="w3-third w3-hide-small w3-padding" onclick="sortHTML('person_list', '.person_item', '.person_fio')" style="cursor:pointer">
-                            <p>Ф.И.О.&nbsp;&#8645;</p>
+                            <p title="Фамилия врача. Упорядочить список фамилий по алфавиту в прямом или обратном порядке.">Ф.И.О.&nbsp;&#8645;</p>
                         </div>
                         <div class="w3-third  w3-hide-small w3-padding" onclick="sortHTML('person_list', '.person_item', '.person_speciality')" style="cursor:pointer">
-                            <p>Специальность&nbsp;&#8645;</p>
+                            <p title="Специальность врача. Упорядочить список специальностей по алфавиту в прямом или обратном порядке.">Специальность&nbsp;&#8645;</p>
                         </div>
                         <div class="w3-container w3-third">
-                            <p><input oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)"
+                            <p title="Сортировка списка по фамилии или специальности. Начните вводить фамилию или специальность врача."><input oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)"
                                    class="w3-input w3-border w3-round" placeholder="Фамилия или специальность"></p>
                         </div>
                     </div>
