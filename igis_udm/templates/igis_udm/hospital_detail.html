@@ -155,8 +155,9 @@
                             <p title="Специальность врача. Упорядочить список специальностей по алфавиту в прямом или обратном порядке.">Специальность&nbsp;&#8645;</p>
                         </div>
                         <div class="w3-container w3-third">
-                            <p title="Сортировка списка по фамилии или специальности. Начните вводить фамилию или специальность врача."><input oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)"
-                                   class="w3-input w3-border w3-round" placeholder="Фамилия или специальность"></p>
+                            <p title="Сортировка списка по фамилии или специальности. Начните вводить фамилию или специальность врача.">
+                                <input id="filter_input" oninput="filterHTML('person_list', 'person_item', 'search_item', this.value)"
+                                       class="w3-input w3-border w3-round" placeholder="Фамилия или специальность"></p>
                         </div>
                     </div>
                     <div id="person_list">
@@ -306,9 +307,16 @@
             </ul>
         </div>
         <div class="w3-cell-row" style="cursor:pointer;">
-            <a href="{% url 'hospital' object.slug %}" class="w3-cell w3-cell-middle w3-hover-yellow w3-border-lightgrey w3-border-top w3-border-right w3-center w3-padding-16"
-                 style="border-bottom-left-radius: 16px;">
+            <a href="{% url 'hospital' object.slug %}"
+               class="w3-cell w3-cell-middle w3-hover-yellow w3-border-lightgrey w3-border-top w3-border-right w3-center w3-padding-16"
+               style="border-bottom-left-radius: 16px;">
                 ПОПРОБОВАТЬ ЗАГРУЗИТЬ ЕЩЕ РАЗ
+            </a>
+            <a href="#"
+               onclick="document.getElementById('info_modal_container').style.display = 'none'"
+               class="w3-cell w3-cell-middle w3-hover-yellow w3-border-lightgrey w3-border-top w3-border-right w3-center w3-padding-16"
+                 style="border-bottom-right-radius: 16px;">
+                ЗАКРЫТЬ
             </a>
         </div>
     </div>
