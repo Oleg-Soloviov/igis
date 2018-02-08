@@ -14,32 +14,32 @@
 {% endblock %}
 
 {% block page_navigation %}
-<div class="w3-bar w3-teal">
-  <div class="w3-right w3-padding">
-    <span class="w3-bar-item">ФИО:</span>
-    <span id="patient_fio" class="w3-bar-item">{% if my_user %}{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}{% else %}НЕ АВТОРИЗОВАН{% endif %}</span>
-    {% if my_user %}
-    <div id="patient_info" class="w3-dropdown-hover w3-bar-item">(инфо)
-        <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
-        <div class="w3-container">
-            <p id="uch_ther">Терапевтический участок: {{ my_user.uch }}</p>
-            <p id="uch_gin"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</p>
-        </div>
-        </div>
-    </div>
-    {% else %}
-    <div id="patient_info" class="w3-dropdown-hover w3-bar-item" style="display:none;">(инфо)
-        <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
-            <div class="w3-container">
-                <p id="uch_ther"></p>
-                <p id="uch_gin" style="display:none;"></p>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    <button id="login_button" class="w3-bar-item w3-button w3-theme-d1 w3-border ew3-border-red w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>
-  </div>
-</div>
+<!--<div class="w3-bar w3-teal">-->
+  <!--<div class="w3-right w3-padding">-->
+    <!--<span class="w3-bar-item">ФИО:</span>-->
+    <!--<span id="patient_fio" class="w3-bar-item">{% if my_user %}{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}{% else %}НЕ АВТОРИЗОВАН{% endif %}</span>-->
+    <!--{% if my_user %}-->
+    <!--<div id="patient_info" class="w3-dropdown-hover w3-bar-item">(инфо)-->
+        <!--<div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">-->
+        <!--<div class="w3-container">-->
+            <!--<p id="uch_ther">Терапевтический участок: {{ my_user.uch }}</p>-->
+            <!--<p id="uch_gin"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</p>-->
+        <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--{% else %}-->
+    <!--<div id="patient_info" class="w3-dropdown-hover w3-bar-item" style="display:none;">(инфо)-->
+        <!--<div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">-->
+            <!--<div class="w3-container">-->
+                <!--<p id="uch_ther"></p>-->
+                <!--<p id="uch_gin" style="display:none;"></p>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--{% endif %}-->
+    <!--<button id="login_button" class="w3-bar-item w3-button w3-theme-d1 w3-border ew3-border-red w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>-->
+  <!--</div>-->
+<!--</div>-->
 {% endblock page_navigation %}
 
 {% block page_container %}
@@ -54,6 +54,34 @@
             </div>
         </div>
         {% block left_column %}
+        <div class="w3-card-2 w3-white w3-margin-bottom">
+            <div class="w3-cell-row">
+                <div class="w3-cell w3-cell-middle w3-padding-small">ФИО:</div>
+                <div id="patient_fio" class="w3-cell w3-padding-small">{% if my_user %}{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}{% else %}НЕ АВТОРИЗОВАН {% endif %}</div>
+            </div>
+            {% if my_user %}
+            <div id="patient_info" class="w3-dropdown-hover w3-col">(инфо)
+                <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
+                <div class="w3-container">
+                    <p id="uch_ther">Терапевтический участок: {{ my_user.uch }}</p>
+                    <p id="uch_gin"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</p>
+                </div>
+                </div>
+            </div>
+            {% else %}
+            <div id="patient_info" class="w3-dropdown-hover w3-col" style="display:none;">(инфо)
+                <div class="w3-dropdown-content w3-card-4" style="width:350px;right:0;margin-top:18px;">
+                    <div class="w3-container">
+                        <p id="uch_ther"></p>
+                        <p id="uch_gin" style="display:none;"></p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="w3-container w3-padding-small">
+                <button id="login_button" class="w3-col w3-button w3-theme-d1 w3-border ew3-border-red w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>
+            </div>
+        </div>
         <div id="zapisi" class="w3-card-2 w3-white w3-margin-bottom">
             <h3 class="w3-teal w3-container w3-padding-small">
                 Ваши записи
