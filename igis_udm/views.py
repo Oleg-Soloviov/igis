@@ -448,7 +448,6 @@ class HospitalGetPersonTime(View):
                 else:
                     divs = doc.xpath('//h2[contains(text(), "Список доступных номерков")]/../following-sibling::div[@style="padding:10px 0;" and a[@class="btn green" and not(@title)]]')
                     data['person_id'] = form.cleaned_data['id']
-
                     for div in divs:
                         time_links = div.xpath('a[@class="btn green"]')
                         sign_date = div.xpath('h2')[0].text_content()
@@ -462,6 +461,7 @@ class HospitalGetPersonTime(View):
                                 data['dates_of_sign'][foo_date].append((link.text_content(), 'false'))
                             else:
                                 data['dates_of_sign'][foo_date].append((link.text_content(), 'true'))
+
             return JsonResponse(data, status=200, safe=False)
         else:
             data = form.errors.as_json()
@@ -490,16 +490,20 @@ class SignInFormView(FormView):
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не отвечает. Попробуйте еще раз.'
+            print('11111111111111111111')
             return JsonResponse(data, status=200, safe=False)
 
         self.request.session['r_session'] = r_session
         if self.request.session.get('my_user', False):
             data['info'] = self.request.session.get('my_user', False)
+            print('22222222222222222')
         else:
             data['status'] = 'logout'
+            print('33333333333333333')
             return JsonResponse(data, status=200, safe=False)
 
         if r.ok and ("Вы успешно записаны на прием" in r.text):
+            print('4444444444444444444')
             url = 'http://igis.ru/online/'
             params = {'obj': self.request.session['igis_obj_id']}
             r = r_session.get(url, params=params, timeout=(1.5, 15))
@@ -543,15 +547,18 @@ class SignInFormView(FormView):
 
                 self.request.session['sign_items'] = data['sign_items']
                 print('readdy items -- ', data['sign_items'])
+            print('555555555555555555')
             return JsonResponse(data, status=200, safe=False)
         elif r.ok and ("ожидайте ответа больницы" in r.text):
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не отвечает.'
+            print('6666666666666666666')
             return JsonResponse(data, status=200, safe=False)
         else:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не отвечает.'
             print('signin errorr -- ', r.text)
+            print('7777777777777777777')
             return JsonResponse(data, status=200, safe=False)
 
     def form_invalid(self, form):

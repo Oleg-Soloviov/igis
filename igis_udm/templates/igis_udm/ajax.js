@@ -50,8 +50,8 @@ function ajax_login() {
             patient_fio_element.innerText = patient_fio;
             success_fio_element.innerText = patient_fio;
 
-            var patient_info = document.getElementById('patient_info');
-            patient_info.style.display = 'block';
+//            var patient_info = document.getElementById('patient_info');
+//            patient_info.style.display = 'block';
             var therap_uch = document.getElementById('uch_ther');
             therap_uch.innerHTML = 'Терапевтический участок: ' + patient.uch;
             if ( patient.uchg != "0" ){
@@ -130,8 +130,8 @@ function ajax_login() {
 
                     zapisi_items_div.appendChild(panel_div);
                 }
-                document.getElementById('zapisi_net').style.display = 'none';
-                document.getElementById('zapisi_items').style.display = 'block';
+//                document.getElementById('zapisi_net').style.display = 'none';
+//                document.getElementById('zapisi_items').style.display = 'block';
             }
             overlay_content.style.display = 'block';
             modal.style.display = 'none';
@@ -201,14 +201,15 @@ function ajax_logout() {
         }
         else if (myObj.status === 'logout') {
         	var patient_fio_element = document.getElementById('patient_fio');
-            patient_fio_element.innerHTML = 'НЕ АВТОРИЗОВАН';
+            patient_fio_element.innerHTML = '';
+//            patient_fio_element.style.display = 'none';
             var login_button = document.getElementById('login_button');
             login_button.innerHTML = 'Авторизация';
             login_button.removeEventListener('click', ajax_logout);
             login_button.addEventListener('click', show_auth_form);
 
-            var patient_info = document.getElementById('patient_info');
-            patient_info.style.display = 'none';
+//            var patient_info = document.getElementById('patient_info');
+//            patient_info.style.display = 'none';
             var ginecol_uch = document.getElementById('uch_gin');
             ginecol_uch.style.display = 'none';
             ginecol_uch.innerHTML = '';
@@ -217,7 +218,7 @@ function ajax_logout() {
 
             var zapisi_items_div = document.getElementById('zapisi_items');
             zapisi_items_div.innerHTML = '';
-            document.getElementById('zapisi_net').style.display = 'block';
+//            document.getElementById('zapisi_net').style.display = 'block';
 
             document.cookie = "family=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

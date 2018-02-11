@@ -253,12 +253,12 @@ function update_zapisy(sign_items) {
             panel_div.appendChild(row_div);
             zapisi_items_div.appendChild(panel_div);
         }
-    document.getElementById('zapisi_net').style.display = 'none';
-    document.getElementById('zapisi_items').style.display = 'block';
+//    document.getElementById('zapisi_net').style.display = 'none';
+//    document.getElementById('zapisi_items').style.display = 'block';
     }
     else{
-    document.getElementById('zapisi_net').style.display = 'block';
-    document.getElementById('zapisi_items').style.display = 'none';
+//    document.getElementById('zapisi_net').style.display = 'block';
+//    document.getElementById('zapisi_items').style.display = 'none';
     }
 }
 
