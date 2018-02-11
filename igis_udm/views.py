@@ -446,7 +446,7 @@ class HospitalGetPersonTime(View):
                     data['status'] = 'nomerkov_net'
                     data['failure'] = 'Номерков нет'
                 else:
-                    divs = doc.xpath('//h2[contains(text(), "Список доступных номерков")]/../following-sibling::div[@style="padding:10px 0;" and a[@class="btn green"]]')
+                    divs = doc.xpath('//h2[contains(text(), "Список доступных номерков")]/../following-sibling::div[@style="padding:10px 0;" and a[@class="btn green" and not(@title)]]')
                     data['person_id'] = form.cleaned_data['id']
 
                     for div in divs:
