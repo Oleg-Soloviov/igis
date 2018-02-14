@@ -42,6 +42,9 @@ function ajax_login() {
         }
         else if (myObj.status === 'authorized') {
         	patient = JSON.parse(decodeURIComponent(myObj.info));
+        	setCookie('family', patient.f, 1)
+            setCookie('name', patient.i, 1)
+            setCookie('otchestvo', patient.o, 1)
             var modal = document.getElementById('modal_auth');
             var success_fio_element = document.getElementById('success_fio');
             var patient_fio_element = document.getElementById('patient_fio');
@@ -49,6 +52,7 @@ function ajax_login() {
 
             patient_fio_element.innerText = patient_fio;
             success_fio_element.innerText = patient_fio;
+            patient_fio_element.parentElement.parentElement.className = "w3-container w3-margin-bottom w3-padding w3-green";
 
 //            var patient_info = document.getElementById('patient_info');
 //            patient_info.style.display = 'block';
@@ -136,12 +140,6 @@ function ajax_login() {
             overlay_content.style.display = 'block';
             modal.style.display = 'none';
             overlay.style.cursor = 'auto';
-
-            setCookie('family', patient.f, 1)
-            setCookie('name', patient.i, 1)
-            setCookie('otchestvo', patient.o, 1)
-
-
         }
       }
         //not actual?
@@ -201,7 +199,8 @@ function ajax_logout() {
         }
         else if (myObj.status === 'logout') {
         	var patient_fio_element = document.getElementById('patient_fio');
-            patient_fio_element.innerHTML = '';
+            patient_fio_element.innerHTML = '&#8203; ';
+            patient_fio_element.parentElement.parentElement.className = "w3-container w3-margin-bottom w3-padding";
 //            patient_fio_element.style.display = 'none';
             var login_button = document.getElementById('login_button');
             login_button.innerHTML = 'Авторизация';
@@ -211,10 +210,10 @@ function ajax_logout() {
 //            var patient_info = document.getElementById('patient_info');
 //            patient_info.style.display = 'none';
             var ginecol_uch = document.getElementById('uch_gin');
-            ginecol_uch.style.display = 'none';
-            ginecol_uch.innerHTML = '';
+//            ginecol_uch.style.display = 'none';
+            ginecol_uch.innerHTML = '&#8203; ';
             var therap_uch = document.getElementById('uch_ther');
-            therap_uch.innerHTML = '';
+            therap_uch.innerHTML = '&#8203; ';
 
             var zapisi_items_div = document.getElementById('zapisi_items');
             zapisi_items_div.innerHTML = '';
@@ -331,6 +330,7 @@ function sign_person_in() {
         else {
             overlay_error_container.style.display = 'block';
             overlay_error_content.innerHTML = myObj.failure;
+            alert('1111111111111')
         }
 
       }

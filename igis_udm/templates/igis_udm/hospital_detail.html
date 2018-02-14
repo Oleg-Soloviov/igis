@@ -29,26 +29,22 @@
         </div>
         {% block left_column %}
         <div class="w3-card-2 w3-white">
-            <div class="w3-container w3-border-bottom w3-margin-bottom w3-padding">
+            <div class="w3-container w3-margin-bottom w3-padding{% if my_user %} w3-green{% endif %}">
                 {% if my_user %}
                 <div class="w3-row">
-                    <h4 id="patient_fio" class="">{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}</h4>
-                    <div id="uch_ther">Терапевтический участок: {{ my_user.uch }}</div>
-                    <div id="uch_gin"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</div>
+                    <h4 id="patient_fio">{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}</h4>
+                    <div id="uch_ther" class="w3-small"{% if not my_user.uch %} style="display:none;"{% endif %}>Терапевтический участок: {{ my_user.uch }}</div>
+                    <div id="uch_gin" class="w3-small"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</div>
                 </div>
                 {% else %}
                 <div class="w3-row">
-                    <h4 id="patient_fio" class=""></h4>
-                    <div id="patient_info" class="">
-                        <div class="w3-container">
-                            <div id="uch_ther"></div>
-                            <div id="uch_gin"></div>
-                        </div>
-                    </div>
+                    <h4 id="patient_fio">&#8203; </h4>
+                    <div id="uch_ther" class="w3-small">&#8203; </div>
+                    <div id="uch_gin" class="w3-small">&#8203; </div>
                 </div>
                 {% endif %}
-                <div class="w3-container w3-padding-small">
-                    <button id="login_button" class="w3-col w3-button w3-theme-d1 w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>
+                <div class="w3-row w3-margin-top w3-right-align">
+                    <button id="login_button" class="w3-btn w3-theme-d1 w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>
                 </div>
             </div>
 

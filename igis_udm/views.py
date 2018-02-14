@@ -185,6 +185,7 @@ class HospitalLoginFormView(FormView):
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
+            print('1212121212')
         except Exception as e:
             data['status'] = 'error'
             data['failure'] = 'Ошибка обращения к серверу больницы.'
@@ -196,16 +197,20 @@ class HospitalLoginFormView(FormView):
                 self.request.session['my_user'] = False
                 data['status'] = 'error'
                 mistake = doc.xpath('//font[@color="red"]')
+                print('200', '--------------')
                 if mistake:
                     mistake_text = mistake[0].text_content()
+                    print('203', mistake_text)
                     if 'Нет ответа от больницы, пробуем подключиться еще' in mistake_text:
                         data['failure'] = 'Нет ответа от больницы, попробуйте еще раз.'
                     else:
                         data['failure'] = mistake_text
                 else:
                     data['failure'] = 'Авторизация в больнице не удалась. Попробуйте еще раз.'
+                    print('210', '343434343434')
             else:
                 if 'вы успешно авторизованы' in r.text:
+                    print('213', '-------------')
                     # перейдем на страницу больницы, чтобы получить данные о записях пациента
                     data['status'] = 'authorized'
                     data['info'] = r_session.cookies.get(medical_cookie, 'Unknown error')
@@ -222,11 +227,13 @@ class HospitalLoginFormView(FormView):
                     except Timeout:
                         data['error'] = 'failed_signs'
                         data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
+                        print('230', '676767676767')
                     except Exception as e:
                         data['error'] = 'failed_signs'
                         data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
-                        print(e)
+                        print('234', e)
                     else:
+                        print('236', '-------------')
                         self.request.session['r_session'] = r_session
                         doc = html.document_fromstring(r.text)
                         # получим все данные о записях пациента
@@ -264,10 +271,12 @@ class HospitalLoginFormView(FormView):
 
                                 data['sign_items'].append(i)
                             self.request.session['sign_items'] = data['sign_items']
+                        print('274', '----------------')
                 else:
                     # for debug, if there something else, maybe not actual
                     data['status'] = 'error'
                     data['failure'] = 'Неизвестная ошибка. Попробуйте еще раз.'
+                    print('279', '---------------')
         finally:
             return JsonResponse(data, status=200, safe=False)
 
@@ -485,21 +494,23 @@ class SignInFormView(FormView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
+            print('aaaaaaaaaaaaa')
         try:
             r = r_session.get(url, params=params, timeout=(1.5, 15))
+            print('bbbbbbbbbbbbbbb')
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не отвечает. Попробуйте еще раз.'
-            print('11111111111111111111')
+            print('ccccccccccccc')
             return JsonResponse(data, status=200, safe=False)
 
         self.request.session['r_session'] = r_session
         if self.request.session.get('my_user', False):
             data['info'] = self.request.session.get('my_user', False)
-            print('22222222222222222')
+            print('dddddddddd')
         else:
             data['status'] = 'logout'
-            print('33333333333333333')
+            print('eeeeeeeeeeeeeeeee')
             return JsonResponse(data, status=200, safe=False)
 
         if r.ok and ("Вы успешно записаны на прием" in r.text):
@@ -558,12 +569,13 @@ class SignInFormView(FormView):
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не отвечает.'
             print('signin errorr -- ', r.text)
-            print('7777777777777777777')
+            print('ffffffffffffffffff')
             return JsonResponse(data, status=200, safe=False)
 
     def form_invalid(self, form):
         data = {}
         data['status'] = 'error'
+        print('ggggggggggggggggg')
         return JsonResponse(data, status=200, safe=False)
 
 
