@@ -29,53 +29,42 @@
         </div>
         {% block left_column %}
         <div class="w3-card-2 w3-white">
-            <div class="w3-container w3-margin-bottom w3-padding{% if my_user %} w3-green{% endif %}">
+            <div class="w3-container w3-cell-row w3-padding {% if my_user %} w3-green{% else %} w3-teal{% endif %}">
                 {% if my_user %}
-                <div class="w3-row">
+                <div class="w3-cell">
                     <h4 id="patient_fio">{{ my_user.f }} {{ my_user.i }} {{ my_user.o }}</h4>
-                    <div id="uch_ther" class="w3-small"{% if not my_user.uch %} style="display:none;"{% endif %}>Терапевтический участок: {{ my_user.uch }}</div>
-                    <div id="uch_gin" class="w3-small"{% if not my_user.guch %} style="display:none;"{% endif %}>Гинекологический участок: {{ my_user.guch }}</div>
+                    <div id="uch_ther" class="w3-small">{% if my_user.uch %}Терапевтический участок: {{ my_user.uch }}{% else %}&#8203; {% endif %}</div>
+                    <div id="uch_gin" class="w3-small">{% if my_user.guch %}Гинекологический участок: {{ my_user.guch }}{% else %}&#8203; {% endif %}</div>
                 </div>
                 {% else %}
-                <div class="w3-row">
+                <div class="w3-cell" style="width:100%;">
                     <h4 id="patient_fio">&#8203; </h4>
                     <div id="uch_ther" class="w3-small">&#8203; </div>
                     <div id="uch_gin" class="w3-small">&#8203; </div>
                 </div>
                 {% endif %}
-                <div class="w3-row w3-margin-top w3-right-align">
+                <div class="w3-cell w3-cell-middle">
                     <button id="login_button" class="w3-btn w3-theme-d1 w3-round-large">{% if my_user %}Выйти{% else %}Авторизация{% endif %}</button>
                 </div>
             </div>
 
-            <div id="zapisi" class="w3-container w3-white w3-margin-bottom w3-border-bottom">
-
-                <h3 class="w3-teal w3-container w3-padding-small">
-                    Ваши записи
-                </h3>
-                <div id="zapisi_items" class="w3-container">
-                    <!--{% if my_user %}-->
-                    <!--{% if sign_items %}-->
+            <div id="zapisi" class="w3-container w3-green w3-margin-bottom">
+                <h5 class="w3-tag w3-round w3-maroon">Ваши записи &darr;&darr;&darr;</h5>
+                <div id="zapisi_items">
                     {% for item in sign_items %}
-                    <div class="w3-panel w3-border w3-light-grey w3-round-large">
-                        <div class="w3-row">
-                            <p class="">{{ item.sign_specialist_role }}</p>
-                        </div>
-                        <div class="w3-row">
-                            <p class="">{{ item.sign_specialist_name }}</p>
-                        </div>
-                        <div class="w3-cell-row">
-                            <div class="w3-cell">Дата и время записи</div>
-                            <div class="w3-cell">{{ item.sign_date }}</div>
-                            <div class="w3-cell">{{ item.sign_time }}</div>
-                        </div>
-                        <div class="w3-row w3-margin-top">
-                            <button class="w3-button w3-teal w3-margin-bottom w3-round w3-right" data-id="{{ item.id }}" data-date="{{ item.date }}" data-time="{{ item.time }}" onclick="sign_out(this)">Отменить</button>
+                    <div class="w3-panel w3-border w3-round">
+                        <div class="w3-cell-row w3-section">
+                            <div class="w3-cell">
+                                <div class="">{{ item.sign_specialist_name }}</div>
+                                <div class="">{{ item.sign_specialist_role }}</div>
+                                <div class="w3-red w3-tag w3-round">{{ item.sign_date }} -- {{ item.sign_time }}</div>
+                            </div>
+                            <div class="w3-cell w3-cell-middle">
+                                <button class="w3-btn w3-teal w3-round" data-id="{{ item.id }}" data-date="{{ item.date }}" data-time="{{ item.time }}" onclick="sign_out(this)">Отменить</button>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
-                    <!--{% endif %}-->
-                    <!--{% endif %}-->
                 </div>
 
             </div>

@@ -60,7 +60,7 @@ class HospitalDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(HospitalDetailView, self).get_context_data(**kwargs)
         self.request.session['igis_obj_id'] = self.object.igis_obj
-        medical_cookie = 'medical__{}'.format(self.object.igis_obj)
+        # medical_cookie = 'medical__{}'.format(self.object.igis_obj)
         persons = []
         context['login_form'] = LoginForm()
         context['place_list'] = Place.objects.all()
@@ -87,15 +87,16 @@ class HospitalDetailView(DetailView):
             if not r_session:
                 r_session = requests.Session()
             try:
-                r = r_session.get(url, timeout=(1.5, 25))
+                r = r_session.get(url, timeout=(8, 25))
             except Timeout:
                 context['error'] = True
+                print('93', '-------', 'timeout error')
             except Exception as e:
                 context['error'] = True
                 print(e)
             else:
                 cached = {}
-                sign_items = self.request.session.get('sign_items', False)
+                sign_items = self.request.session.get('sign_items', [])
                 context['sign_items'] = sign_items
                 cached['sign_items'] = sign_items
                 doc = html.document_fromstring(r.text)
@@ -149,14 +150,7 @@ class HospitalDetailView(DetailView):
                 cache.set(str(self.object.igis_obj), cached, 60*60*3)
 
             self.request.session['r_session'] = r_session
-            # if r_session.cookies.get(medical_cookie, '+') != '+':
-            #     my_user = r_session.cookies.get(medical_cookie)
-            #     my_user = json.loads(parse.unquote(my_user))
-            #     context['my_user'] = my_user
-            #     self.request.session['my_user'] = my_user
-            # else:
-            #     context['my_user'] = False
-            #     self.request.session['my_user'] = False
+
         return context
 
 
@@ -181,11 +175,11 @@ class HospitalLoginFormView(FormView):
         if not r_session:
             r_session = requests.Session()
         try:
-            r = r_session.get(url, params=params, timeout=(1.5, 25))
+            r = r_session.get(url, params=params, timeout=(2.5, 25))
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
-            print('1212121212')
+            print('182 --------')
         except Exception as e:
             data['status'] = 'error'
             data['failure'] = 'Ошибка обращения к серверу больницы.'
@@ -223,7 +217,7 @@ class HospitalLoginFormView(FormView):
                     url = 'http://igis.ru/online'
                     params = {'obj': self.request.session['igis_obj_id']}
                     try:
-                        r = r_session.get(url, params=params, timeout=(1.5, 2))
+                        r = r_session.get(url, params=params, timeout=(2.5, 2))
                     except Timeout:
                         data['error'] = 'failed_signs'
                         data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'

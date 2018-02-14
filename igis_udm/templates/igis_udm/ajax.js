@@ -52,10 +52,8 @@ function ajax_login() {
 
             patient_fio_element.innerText = patient_fio;
             success_fio_element.innerText = patient_fio;
-            patient_fio_element.parentElement.parentElement.className = "w3-container w3-margin-bottom w3-padding w3-green";
+            patient_fio_element.parentElement.parentElement.className = "w3-container w3-cell-row w3-padding w3-green";
 
-//            var patient_info = document.getElementById('patient_info');
-//            patient_info.style.display = 'block';
             var therap_uch = document.getElementById('uch_ther');
             therap_uch.innerHTML = 'Терапевтический участок: ' + patient.uch;
             if ( patient.uchg != "0" ){
@@ -75,67 +73,51 @@ function ajax_login() {
                 zapisi_items_div.innerHTML = '';
                 for (var i = 0; i < myObj.sign_items.length; i++) {
                     var panel_div = document.createElement('div');
-                    panel_div.className = 'w3-panel w3-border w3-light-grey w3-round-large';
+                    panel_div.className = 'w3-panel w3-border w3-round';
 
                     var row_div = document.createElement('div');
-                    row_div.className = 'w3-row'
-                    var el_par = document.createElement('p');
-                    var el_text = document.createTextNode(myObj.sign_items[i].sign_specialist_role);
-                    el_par.appendChild(el_text);
-                    row_div.appendChild(el_par);
-                    panel_div.appendChild(row_div);
+                    row_div.className = 'w3-cell-row w3-section'
 
-                    row_div = document.createElement('div');
-                    row_div.className = 'w3-row'
-                    el_par = document.createElement('p');
-                    el_text = document.createTextNode(myObj.sign_items[i].sign_specialist_name);
-                    el_par.appendChild(el_text);
-                    row_div.appendChild(el_par);
-                    panel_div.appendChild(row_div);
+                    var cell_div = document.createElement('div');
+                    cell_div.className = 'w3-cell';
 
-                    row_div = document.createElement('div');
-                    row_div.className = 'w3-cell-row';
+                    var el_name = document.createElement('div');
+                    var el_text = document.createTextNode(myObj.sign_items[i].sign_specialist_name);
+                    el_name.appendChild(el_text);
 
-                    var el_div = document.createElement('div');
-                    el_div.className = 'w3-cell';
-                    el_text = document.createTextNode('Дата и время записи');
-                    el_div.appendChild(el_text);
-                    row_div.appendChild(el_div);
+                    var el_role = document.createElement('div');
+                    el_text = document.createTextNode(myObj.sign_items[i].sign_specialist_role);
+                    el_role.appendChild(el_text);
 
-                    el_div = document.createElement('div');
-                    el_div.className = 'w3-cell';
-                    el_text = document.createTextNode(myObj.sign_items[i].sign_date)
-                    el_div.appendChild(el_text);
-                    row_div.appendChild(el_div);
+                    var el_time = document.createElement('div');
+                    el_time.className = 'w3-red w3-tag w3-round';
+                    el_text = document.createTextNode(myObj.sign_items[i].sign_date + ' -- ' + myObj.sign_items[i].sign_time);
+                    el_time.appendChild(el_text);
 
-                    el_div = document.createElement('div');
-                    el_div.className = 'w3-cell';
-                    el_text = document.createTextNode(myObj.sign_items[i].sign_time)
-                    el_div.appendChild(el_text);
-                    row_div.appendChild(el_div);
+                    cell_div.appendChild(el_name);
+                    cell_div.appendChild(el_role);
+                    cell_div.appendChild(el_time);
 
-                    panel_div.appendChild(row_div);
+                    row_div.appendChild(cell_div)
 
-                    row_div = document.createElement('div');
-                    row_div.className = 'w3-row w3-margin-top';
+                    cell_div = document.createElement('div');
+                    cell_div.className = 'w3-cell w3-cell-middle';
+
                     var el_button = document.createElement('button');
                     el_text = document.createTextNode('Отменить');
                     el_button.appendChild(el_text);
-                    el_button.className = 'w3-button w3-teal w3-margin-bottom w3-round w3-right';
-                    //el_button.setAttribute('data-obj', myObj.sign_items[i].obj);
+                    el_button.className = 'w3-btn w3-teal w3-round';
                     el_button.setAttribute('data-id', myObj.sign_items[i].id);
                     el_button.setAttribute('data-date', myObj.sign_items[i].date);
                     el_button.setAttribute('data-time', myObj.sign_items[i].time);
                     el_button.addEventListener('click', sign_out);
-//                    el_button.onclick = sign_out;
-                    row_div.appendChild(el_button);
+                    cell_div.appendChild(el_button);
 
+                    row_div.appendChild(cell_div)
                     panel_div.appendChild(row_div);
 
                     zapisi_items_div.appendChild(panel_div);
                 }
-//                document.getElementById('zapisi_net').style.display = 'none';
-//                document.getElementById('zapisi_items').style.display = 'block';
             }
             overlay_content.style.display = 'block';
             modal.style.display = 'none';
@@ -200,24 +182,20 @@ function ajax_logout() {
         else if (myObj.status === 'logout') {
         	var patient_fio_element = document.getElementById('patient_fio');
             patient_fio_element.innerHTML = '&#8203; ';
-            patient_fio_element.parentElement.parentElement.className = "w3-container w3-margin-bottom w3-padding";
-//            patient_fio_element.style.display = 'none';
+            patient_fio_element.parentElement.parentElement.className = "w3-container w3-cell-row w3-padding w3-teal";
+            patient_fio_element.parentElement.style.width = '100%';
             var login_button = document.getElementById('login_button');
             login_button.innerHTML = 'Авторизация';
             login_button.removeEventListener('click', ajax_logout);
             login_button.addEventListener('click', show_auth_form);
 
-//            var patient_info = document.getElementById('patient_info');
-//            patient_info.style.display = 'none';
             var ginecol_uch = document.getElementById('uch_gin');
-//            ginecol_uch.style.display = 'none';
             ginecol_uch.innerHTML = '&#8203; ';
             var therap_uch = document.getElementById('uch_ther');
             therap_uch.innerHTML = '&#8203; ';
 
             var zapisi_items_div = document.getElementById('zapisi_items');
             zapisi_items_div.innerHTML = '';
-//            document.getElementById('zapisi_net').style.display = 'block';
 
             document.cookie = "family=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
