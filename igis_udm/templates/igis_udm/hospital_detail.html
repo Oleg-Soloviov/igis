@@ -69,16 +69,14 @@
 
             </div>
 
-            <div class="w3-container w3-border-bottom w3-white w3-margin-bottom  w3-display-container">
+            <div class="w3-border-bottom w3-display-container">
                 <div class="w3-cell-row w3-margin-bottom">
                     <h6 class="w3-text-grey w3-padding-small w3-cell w3-cell-middle w3-border-right"><a href="{{ hospital.place.get_absolute_url }}">{{ hospital.place.name }}</a></h6>
                     <div class="w3-text-grey w3-padding-small w3-cell">
-                        <h6 >{{ hospital.name }}</h6>
-                        <a href="#" onclick="toggle_class('hospital_info', 'w3-hide')">Адрес, т/ф, сайт больницы</span></a>
+                        <h6>{{ hospital.name }}</h6>
+                        <div><a href="#" onclick="toggle_class('hospital_info', 'w3-hide')">Адрес, т/ф, сайт больницы</span></a></div>
                     </div>
                 </div>
-
-
                 <div id="hospital_info" class="w3-container w3-hide">
                     <div class="w3-row">
                         <div class="w3-third w3-center w3-border-right w3-border-left">
@@ -102,9 +100,9 @@
                 </div>
             </div>
 
-            <div class="w3-container w3-white">
+            <div class="w3-container">
                 <p>
-                    <button onclick="toggle_class('cities_list','w3-hide')" class="w3-button w3-block w3-left-align w3-teal w3-round">Выбрать город или район</button>
+                    <a href="#" onclick="toggle_class('cities_list','w3-hide')" class="w3-text-grey">Выбрать город или район</a>
                 </p>
                 <div id="cities_list" class="w3-container w3-hide">
                     <form class="w3-margin-bottom">
