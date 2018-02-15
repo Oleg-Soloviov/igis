@@ -102,24 +102,9 @@
 
             <div class="w3-container">
                 <p>
-                    <a href="#" onclick="toggle_class('cities_list','w3-hide')" class="w3-text-grey">Выбрать город или район</a>
+                    <a href="{% url 'place_list' %}"  class="w3-text-grey">Выбрать город или район</a>
                 </p>
-                <div id="cities_list" class="w3-container w3-hide">
-                    <form class="w3-margin-bottom">
-                        <p>
-                            <label class="w3-text-grey">Фильтр по названию</label>
-                            <input oninput="filterHTML('places_list', 'my_city', 'search_item', this.value)" class="w3-input w3-border">
-                        </p>
-                    </form>
-                    <ul id="places_list" class="w3-ul">
-                        {% for place in place_list %}
-                        <li class="my_city"><a class="search_item" href="{{ place.get_absolute_url }}">{{ place.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
             </div>
-
-
         </div>
 
         {% endblock left_column %}
