@@ -118,6 +118,7 @@ function ajax_login() {
 
                     zapisi_items_div.appendChild(panel_div);
                 }
+                zapisi.className = 'w3-container w3-margin-bottom w3-green';
             }
             overlay_content.style.display = 'block';
             modal.style.display = 'none';
@@ -196,6 +197,9 @@ function ajax_logout() {
 
             var zapisi_items_div = document.getElementById('zapisi_items');
             zapisi_items_div.innerHTML = '';
+
+            var zapisi = document.getElementById('zapisi');
+            zapisi.className = 'w3-container w3-teal w3-margin-bottom';
 
             document.cookie = "family=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

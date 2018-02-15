@@ -48,8 +48,8 @@
                 </div>
             </div>
 
-            <div id="zapisi" class="w3-container w3-green w3-margin-bottom">
-                <h5 class="w3-tag w3-round w3-maroon">Ваши записи &darr;&darr;&darr;</h5>
+            <div id="zapisi" class="w3-container w3-margin-bottom{% if my_user %} w3-green{% else %} w3-teal{% endif %}">
+                <h5 class="w3-tag w3-round">Ваши записи &darr;&darr;&darr;</h5>
                 <div id="zapisi_items">
                     {% for item in sign_items %}
                     <div class="w3-panel w3-border w3-round">
