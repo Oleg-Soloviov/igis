@@ -13,6 +13,9 @@ else
     login_button.addEventListener('click', show_auth_form);
 }
 
+if (document.getElementById('filter_input').value) {
+    filterHTML('person_list', 'person_item', 'search_item', document.getElementById('filter_input').value)
+}
 ////////////////////////////////////////////////////////////
 
 var dObj; //for debug
