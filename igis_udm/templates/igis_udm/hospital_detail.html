@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div id="zapisi" class="w3-container w3-margin-bottom{% if my_user %} w3-green{% else %} w3-teal{% endif %}">
+            <div id="zapisi" class="w3-container w3-margin-bottom w3-green{% if not zapisi_items%} w3-hide{% endif %}">
                 <h5 class="w3-tag w3-round w3-theme-d3">Ваши записи &darr;&darr;&darr;</h5>
                 <div id="zapisi_items">
                     {% for item in sign_items %}
@@ -110,6 +110,7 @@
         {% endblock left_column %}
         <!-- End Left Column -->
     </div>
+    <!-- End of Left Column -->
 
     <!-- Right Column -->
     {% block right_column %}
