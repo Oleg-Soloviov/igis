@@ -52,7 +52,7 @@ function ajax_login() {
 
             patient_fio_element.innerText = patient_fio;
             success_fio_element.innerText = patient_fio;
-            patient_fio_element.parentElement.parentElement.className = "w3-container w3-cell-row w3-padding w3-green";
+            patient_fio_element.parentElement.parentElement.className = "w3-container w3-cell-row w3-green";
 
             var therap_uch = document.getElementById('uch_ther');
             therap_uch.innerHTML = 'Терапевтический участок: ' + patient.uch;
@@ -201,7 +201,7 @@ function ajax_logout() {
             var zapisi = document.getElementById('zapisi');
             var class_txt = zapisi.className
             if (!class_txt.includes('w3-hide')) {
-                zapisi.className += 'w3-hide';
+                zapisi.className += ' w3-hide';
             }
 
             document.cookie = "family=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
