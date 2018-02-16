@@ -312,7 +312,7 @@ function sign_person_in() {
         else {
             overlay_error_container.style.display = 'block';
             overlay_error_content.innerHTML = myObj.failure;
-            alert('1111111111111')
+//            alert('1111111111111')
         }
 
       }
@@ -321,7 +321,7 @@ function sign_person_in() {
       }
     }
 
-    overlay_content.style.display = 'none';
+    overlay_content.style.display = 'disable';
     overlay.style.cursor = 'wait';
     xhttp.open("POST", "{% url 'signin' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
