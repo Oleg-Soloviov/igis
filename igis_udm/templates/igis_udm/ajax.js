@@ -12,7 +12,7 @@ else
 {
     login_button.addEventListener('click', show_auth_form);
 }
-
+// фильтрация списка врачей после перезагрузки
 if (document.getElementById('filter_input').value) {
     filterHTML('person_list', 'person_item', 'search_item', document.getElementById('filter_input').value)
 }
@@ -254,7 +254,7 @@ function show_failure(parent_li, myPersonsObj) {
     parent_li.appendChild(date_row_div)
 }
 
-
+// отображение доступных номерков к врачу
 function show_schedule_time(parent_li, myPersonsObj, button) {
     button.removeEventListener('click', get_ajax_time);
     button.addEventListener('click', hide_nomerki);
@@ -309,16 +309,19 @@ function sign_person_in() {
         if ((myObj.status == 'sign') && myObj.sign_items){
             update_zapisy(myObj.sign_items)
             overlay.style.display = 'none';
+            overlay.style.cursor = 'auto';
             // очистим last_alarm
             document.getElementById('signin_fio').innerHTML = '';
             document.getElementById('signin_speciality').innerHTML = '';
             document.getElementById('signin_date').innerHTML = '';
             document.getElementById('signin_time').innerHTML = '';
+            overlay_error_content.innerHTML = '';
+            overlay_error_container.style.display = 'none';
         }
         else {
+            overlay_content.style.display = 'block';
             overlay_error_container.style.display = 'block';
             overlay_error_content.innerHTML = myObj.failure;
-//            alert('1111111111111')
         }
 
       }
@@ -327,7 +330,7 @@ function sign_person_in() {
       }
     }
 
-    overlay_content.style.display = 'disable';
+    overlay_content.style.display = 'none';
     overlay.style.cursor = 'wait';
     xhttp.open("POST", "{% url 'signin' %}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -371,7 +374,7 @@ function get_ajax_time(evt) {
     xhttp.send(data);
 }
 
-
+//отмена номерка
 function sign_out(el) {
     if (el.type == "click") {
     el = el.target;

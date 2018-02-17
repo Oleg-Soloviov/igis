@@ -387,7 +387,7 @@ class SignInFormView(FormView):
             print('4444444444444444444')
             url = 'http://igis.ru/online/'
             params = {'obj': self.request.session['igis_obj_id']}
-            r = r_session.get(url, params=params, timeout=(1.5, 15))
+            r = r_session.get(url, params=params, timeout=(5.5, 15))
             self.request.session['r_session'] = r_session
             doc = html.document_fromstring(r.text)
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')

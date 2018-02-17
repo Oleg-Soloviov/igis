@@ -182,6 +182,7 @@ function last_alarm_before_signin() {
         signin_request_data = 'specialist_id=' + specialist_id +                   //id врача
                                '&date=' + d.getFullYear() + r_month + r_date + //дата (20171223)
                                '&time=' + signin_time;                              //время (11:20)
+        overlay_content.style.display = 'block';
         overlay.style.display = 'block';
     }
     else{
@@ -196,64 +197,47 @@ function update_zapisy(sign_items) {
     if (sign_items) {
         for (var i=0; i < sign_items.length; i++) {
             var panel_div = document.createElement('div');
-            panel_div.className = 'w3-panel w3-border w3-light-grey w3-round-large';
+            panel_div.className = 'w3-panel w3-border w3-round';
 
             var row_div = document.createElement('div');
-            row_div.className = 'w3-row'
-            var el_par = document.createElement('p');
-            var el_text = document.createTextNode(sign_items[i].sign_specialist_role);
-            el_par.appendChild(el_text);
-            row_div.appendChild(el_par);
-            panel_div.appendChild(row_div);
+            row_div.className = 'w3-cell-row w3-section';
 
-            row_div = document.createElement('div');
-            row_div.className = 'w3-row'
-            el_par = document.createElement('p');
-            el_text = document.createTextNode(sign_items[i].sign_specialist_name);
-            el_par.appendChild(el_text);
-            row_div.appendChild(el_par);
-            panel_div.appendChild(row_div);
-
-            row_div = document.createElement('div');
-            row_div.className = 'w3-cell-row';
-
+            var cell_div_1 = document.createElement('div');
+            cell_div_1.className = 'w3-cell'
             var el_div = document.createElement('div');
-            el_div.className = 'w3-cell';
-            el_text = document.createTextNode('Дата и время записи');
+            var el_text = document.createTextNode(sign_items[i].sign_specialist_name);
             el_div.appendChild(el_text);
-            row_div.appendChild(el_div);
+            cell_div_1.appendChild(el_div);
 
             el_div = document.createElement('div');
-            el_div.className = 'w3-cell';
-            el_text = document.createTextNode(sign_items[i].sign_date)
+            el_text = document.createTextNode(sign_items[i].sign_specialist_role);
             el_div.appendChild(el_text);
-            row_div.appendChild(el_div);
+            cell_div_1.appendChild(el_div);
 
             el_div = document.createElement('div');
-            el_div.className = 'w3-cell';
-            el_text = document.createTextNode(sign_items[i].sign_time)
+            el_div.className = 'w3-red w3-tag w3-round';
+            el_text = document.createTextNode(sign_items[i].sign_date + ' -- ' + sign_items[i].sign_time);
             el_div.appendChild(el_text);
-            row_div.appendChild(el_div);
+            cell_div_1.appendChild(el_div);
 
-            panel_div.appendChild(row_div);
-
-            row_div = document.createElement('div');
-            row_div.className = 'w3-row w3-margin-top';
+            var cell_div_2 = document.createElement('div');
+            cell_div_2.className = 'w3-cell w3-cell-middle';
             var el_button = document.createElement('button');
             el_text = document.createTextNode('Отменить');
             el_button.appendChild(el_text);
-            el_button.className = 'w3-button w3-teal w3-margin-bottom w3-round w3-right';
-            //el_button.setAttribute('data-obj', item.obj);
+            el_button.className = 'w3-btn w3-teal w3-round';
             el_button.setAttribute('data-id', sign_items[i].id);
             el_button.setAttribute('data-date', sign_items[i].date);
             el_button.setAttribute('data-time', sign_items[i].time);
-//            el_button.setAttribute('oncklick', 'sign_out(this)');
             el_button.addEventListener('click', sign_out);
-            row_div.appendChild(el_button);
+            cell_div_2.appendChild(el_button);
 
+            row_div.appendChild(cell_div_1);
+            row_div.appendChild(cell_div_2);
             panel_div.appendChild(row_div);
             zapisi_items_div.appendChild(panel_div);
         }
+        toggle_class('zapisi', 'w3-hide');
 //    document.getElementById('zapisi_net').style.display = 'none';
 //    document.getElementById('zapisi_items').style.display = 'block';
     }
