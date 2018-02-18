@@ -15,7 +15,9 @@ from django.views.generic import TemplateView, DetailView, FormView, View
 from .forms import *
 from .models import Place, Hospital
 
+timeout = settings.MY_REQUESTS_CONNECT_TIMEOUT, settings.MY_REQUESTS_READ_TIMEOUT
 logger = logging.getLogger('django')
+
 
 class PlaceListView(TemplateView):
     template_name = 'igis_udm/place_list.html'
@@ -87,7 +89,7 @@ class HospitalDetailView(DetailView):
             if not r_session:
                 r_session = requests.Session()
             try:
-                r = r_session.get(url, timeout=(8, 25))
+                r = r_session.get(url, timeout=timeout)
             except Timeout:
                 context['error'] = True
                 print('93', '-------', 'timeout error')
@@ -175,7 +177,7 @@ class HospitalLoginFormView(FormView):
         if not r_session:
             r_session = requests.Session()
         try:
-            r = r_session.get(url, params=params, timeout=(2.5, 25))
+            r = r_session.get(url, params=params, timeout=timeout)
         except Timeout:
             data['status'] = 'error'
             data['failure'] = 'Сервер больницы не ответил. Попробуйте еще раз.'
@@ -217,7 +219,7 @@ class HospitalLoginFormView(FormView):
                     url = 'http://igis.ru/online'
                     params = {'obj': self.request.session['igis_obj_id']}
                     try:
-                        r = r_session.get(url, params=params, timeout=(2.5, 2))
+                        r = r_session.get(url, params=params, timeout=timeout)
                     except Timeout:
                         data['error'] = 'failed_signs'
                         data['failure'] = 'Не удалось получить данные о ваших записях к врачу.'
@@ -315,7 +317,7 @@ class HospitalGetPersonTime(View):
         if form.is_valid():
             url = 'http://igis.ru/online?obj={}&page=doc&id={}'.format(self.request.session['igis_obj_id'], form.cleaned_data['id'])
             try:
-                r = requests.get(url, timeout=(5.5, 15))
+                r = requests.get(url, timeout=timeout)
             except Timeout:
                 data['status'] = 'error'
                 data['failure'] = 'Сервер больницы не отвечает. Попробуйте еще раз.'
@@ -366,7 +368,7 @@ class SignInFormView(FormView):
             r_session = requests.Session()
             print('aaaaaaaaaaaaa')
         try:
-            r = r_session.get(url, params=params, timeout=(5.5, 15))
+            r = r_session.get(url, params=params, timeout=timeout)
             print('bbbbbbbbbbbbbbb')
         except Timeout:
             data['status'] = 'error'
@@ -387,7 +389,7 @@ class SignInFormView(FormView):
             print('4444444444444444444')
             url = 'http://igis.ru/online/'
             params = {'obj': self.request.session['igis_obj_id']}
-            r = r_session.get(url, params=params, timeout=(5.5, 15))
+            r = r_session.get(url, params=params, timeout=timeout)
             self.request.session['r_session'] = r_session
             doc = html.document_fromstring(r.text)
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
@@ -471,14 +473,14 @@ class SignOutFormView(FormView):
         r_session = self.request.session.get('r_session', False)
         if not r_session:
             r_session = requests.Session()
-        r = r_session.get(url, params=params, timeout=(5.5, 15))
+        r = r_session.get(url, params=params, timeout=timeout)
         self.request.session['r_session'] = r_session
 
         if r.ok and ('Ваша запись успешно отменена' in r.text):
             data['status'] = 'signout'
             url = 'http://igis.ru/online'
             params = {'obj': self.request.session['igis_obj_id']}
-            r = r_session.get(url, params=params, timeout=(1.5, 15))
+            r = r_session.get(url, params=params, timeout=timeout)
             self.request.session['r_session'] = r_session
 
             doc = html.document_fromstring(r.text)

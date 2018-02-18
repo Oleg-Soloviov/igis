@@ -144,3 +144,6 @@ ADMINS = [('Oleg', 'osoloviov@list.ru'),]
 # EMAIL_USE_TLS = True
 
 EMAIL_BACKEND = 'myproject.my_email.MailgunEmailBackend'
+
+MY_REQUESTS_CONNECT_TIMEOUT = 8
+MY_REQUESTS_READ_TIMEOUT = 25

@@ -292,7 +292,6 @@ function show_schedule_time(parent_li, myPersonsObj, button) {
     }
 }
 
-
 // запись к специалисту
 function sign_person_in() {
     var xhttp = new XMLHttpRequest();
@@ -306,10 +305,10 @@ function sign_person_in() {
       if (this.readyState == 4 && this.status == 200) {
         var myObj = JSON.parse(this.responseText);
         dObj = myObj; // for debug
+        overlay.style.cursor = 'auto';
         if ((myObj.status == 'sign') && myObj.sign_items){
             update_zapisy(myObj.sign_items)
             overlay.style.display = 'none';
-            overlay.style.cursor = 'auto';
             // очистим last_alarm
             document.getElementById('signin_fio').innerHTML = '';
             document.getElementById('signin_speciality').innerHTML = '';
@@ -317,6 +316,7 @@ function sign_person_in() {
             document.getElementById('signin_time').innerHTML = '';
             overlay_error_content.innerHTML = '';
             overlay_error_container.style.display = 'none';
+            signin_time_button.disabled = true;
         }
         else {
             overlay_content.style.display = 'block';
@@ -393,11 +393,12 @@ function sign_out(el) {
       if (this.readyState == 4 && this.status == 200) {
         var myObj = JSON.parse(this.responseText);
         dObj = myObj; //for debug
+        overlay.style.cursor = 'auto';
         if (myObj.status == 'signout'){
             update_zapisy(myObj.sign_items)
             } else {
-                document.getElementById('zapisi_net').style.display = 'block';
-                document.getElementById('zapisi_items').style.display = 'none';
+//                document.getElementById('zapisi_net').style.display = 'block';
+//                document.getElementById('zapisi_items').style.display = 'none';
                 alert(myObj.failure)
             }
 

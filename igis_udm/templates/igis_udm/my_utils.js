@@ -179,6 +179,7 @@ function last_alarm_before_signin() {
         document.getElementById('signin_time').innerHTML = signin_time;
         var r_month = (d.getMonth() < 10) ? '0' + (d.getMonth() + 1) : d.getMonth() + 1;
         var r_date = (d.getDate() < 10) ? '0' + d.getDate() : d.getDate();
+        signin_time_button = this;
         signin_request_data = 'specialist_id=' + specialist_id +                   //id врача
                                '&date=' + d.getFullYear() + r_month + r_date + //дата (20171223)
                                '&time=' + signin_time;                              //время (11:20)
@@ -237,13 +238,16 @@ function update_zapisy(sign_items) {
             panel_div.appendChild(row_div);
             zapisi_items_div.appendChild(panel_div);
         }
-        toggle_class('zapisi', 'w3-hide');
-//    document.getElementById('zapisi_net').style.display = 'none';
-//    document.getElementById('zapisi_items').style.display = 'block';
+        var class_txt = zapisi.className;
+        if (class_txt.includes('w3-hide')) {
+            toggle_class('zapisi', 'w3-hide');
+            }
     }
     else{
-//    document.getElementById('zapisi_net').style.display = 'block';
-//    document.getElementById('zapisi_items').style.display = 'none';
+        var class_txt = zapisi.className;
+        if (!class_txt.includes('w3-hide')) {
+            toggle_class('zapisi', 'w3-hide');
+            }
     }
 }
 
