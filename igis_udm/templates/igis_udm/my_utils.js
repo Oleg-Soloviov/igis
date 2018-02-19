@@ -239,6 +239,7 @@ function update_zapisy(sign_items) {
             zapisi_items_div.appendChild(panel_div);
         }
         zapisi.style.display = 'block';
+        zapisi.scrollIntoView({behavior: "smooth"});
     }
     else{
         zapisi.style.display = 'none';
