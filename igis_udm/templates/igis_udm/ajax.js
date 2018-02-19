@@ -376,6 +376,7 @@ function get_ajax_time(evt) {
 
 //отмена номерка
 function sign_out(el) {
+    // если el это событие, возьмем цель - кнопку
     if (el.type == "click") {
     el = el.target;
     }
@@ -395,7 +396,7 @@ function sign_out(el) {
         dObj = myObj; //for debug
         overlay.style.cursor = 'auto';
         if (myObj.status == 'signout'){
-            update_zapisy(myObj.sign_items)
+            update_zapisy(myObj.sign_items);
             } else {
 //                document.getElementById('zapisi_net').style.display = 'block';
 //                document.getElementById('zapisi_items').style.display = 'none';
