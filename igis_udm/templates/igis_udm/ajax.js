@@ -71,7 +71,6 @@ function ajax_login() {
             login_button.removeEventListener('click', show_auth_form);
             login_button.addEventListener('click', ajax_logout);
             if (myObj.sign_items){
-//                var zapisi = document.getElementById('zapisi');
                 var zapisi_items_div = document.getElementById('zapisi_items');
                 zapisi_items_div.innerHTML = '';
                 for (var i = 0; i < myObj.sign_items.length; i++) {
@@ -121,8 +120,8 @@ function ajax_login() {
 
                     zapisi_items_div.appendChild(panel_div);
                 }
-//                zapisi.className = 'w3-container w3-margin-bottom w3-green';
-                toggle_class('zapisi', 'w3-hide');
+                var zapisi = document.getElementById('zapisi');
+                zapisi.style.display = 'block';
             }
             overlay_content.style.display = 'block';
             modal.style.display = 'none';
@@ -202,10 +201,7 @@ function ajax_logout() {
             var zapisi_items_div = document.getElementById('zapisi_items');
             zapisi_items_div.innerHTML = '';
             var zapisi = document.getElementById('zapisi');
-            var class_txt = zapisi.className
-            if (!class_txt.includes('w3-hide')) {
-                zapisi.className += ' w3-hide';
-            }
+            zapisi.style.display = 'none';
 
             document.cookie = "family=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

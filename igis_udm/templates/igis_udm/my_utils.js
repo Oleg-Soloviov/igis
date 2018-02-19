@@ -238,16 +238,10 @@ function update_zapisy(sign_items) {
             panel_div.appendChild(row_div);
             zapisi_items_div.appendChild(panel_div);
         }
-        var class_txt = zapisi.className;
-        if (class_txt.includes('w3-hide')) {
-            toggle_class('zapisi', 'w3-hide');
-            }
+        zapisi.style.display = 'block';
     }
     else{
-        var class_txt = zapisi.className;
-        if (!class_txt.includes('w3-hide')) {
-            toggle_class('zapisi', 'w3-hide');
-            }
+        zapisi.style.display = 'none';
     }
 }
 
