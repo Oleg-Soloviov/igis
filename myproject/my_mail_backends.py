@@ -3,6 +3,7 @@ from django.core.mail.backends.base import BaseEmailBackend
 from django.conf import settings
 from django.core.mail.message import sanitize_address
 
+
 class MailgunEmailBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
         if not email_messages:

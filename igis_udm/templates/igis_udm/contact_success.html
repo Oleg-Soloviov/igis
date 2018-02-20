@@ -1,9 +1,9 @@
 {% extends 'igis_udm/base.html' %}
 {% load staticfiles %}
 
-{% block title %}Отправьте письмо с Вашими пожеланиями, замечаниями и предлжениями{% endblock %}
-{% block meta_keywords %}{{ hospital.name }}, запись к врачу.{% endblock %}
-{% block meta_description %}Удмуртия. {{ hospital.name }}. Запись на прием к врачу.{% endblock meta_description %}
+{% block title %}Спасибо за Ваше сообщение.{% endblock %}
+{% block meta_keywords %}Удмуртия, запись к врачу, обратная связь, письмо отправлено{% endblock %}
+{% block meta_description %}Удмуртия. Сервис записи к врачу. Обратная связь. Письмо отправлено.{% endblock meta_description %}
 
 {% block header_custom_css %}
 <style>
@@ -24,7 +24,7 @@
             </p>
             <hr>
             <p>
-                <a href="{% url 'place_list' %}">Выбрать город или район Удмуртии.</a>
+                <a href="{% url 'place_list' %}" title="Выберите город или район Удмуртии для записи к врачу.">Выбрать город или район Удмуртии.</a>
             </p>
         </div>
     </div>
