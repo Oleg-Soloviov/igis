@@ -14,6 +14,8 @@ from django.core.cache import cache
 from django.views.generic import TemplateView, DetailView, FormView, View
 from .forms import *
 from .models import Place, Hospital
+from .utils import get_sign_items
+
 
 timeout = settings.MY_REQUESTS_CONNECT_TIMEOUT, settings.MY_REQUESTS_READ_TIMEOUT
 logger = logging.getLogger('django')
@@ -235,37 +237,7 @@ class HospitalLoginFormView(FormView):
                         # получим все данные о записях пациента
                         sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
                         if sign_items:
-                            data['sign_items'] = []
-                            for item in sign_items:
-                                i = {}
-                                sign_info = item.text_content()
-                                m = re.search(r'Ф.И.О: ([\w ]+)\(', sign_info)
-                                if m:
-                                    i['sign_specialist_name'] = m.group(1)
-                                m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
-                                if m:
-                                    i['sign_specialist_role'] = m.group(1)
-                                m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
-                                if m:
-                                    i['sign_date'] = m.group(1)
-                                    i['sign_time'] = m.group(2)
-                                l = item.xpath('./a[contains(text(), "Отменить запись")]')
-                                l = l[0].xpath('@href')
-                                if l:
-                                    m = re.search(r'obj=(\d+)&', l[0])
-                                    if m:
-                                        i['obj'] = m.group(1)
-                                    m = re.search(r'kw=(\d+)&', l[0])
-                                    if m:
-                                        i['id'] = m.group(1)
-                                    m = re.search(r'd=(\d+)&', l[0])
-                                    if m:
-                                        i['date'] = m.group(1)
-                                    m = re.search(r't=([\d]{2}:[\d]{2})', l[0])
-                                    if m:
-                                        i['time'] = m.group(1)
-
-                                data['sign_items'].append(i)
+                            data['sign_items'] = get_sign_items(sign_items)
                             self.request.session['sign_items'] = data['sign_items']
                         print('274', '----------------')
                 else:
@@ -394,40 +366,10 @@ class SignInFormView(FormView):
             doc = html.document_fromstring(r.text)
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
             print('raw_items -- ', sign_items)
+            data['sign_items'] = []
             if sign_items:
-                data['sign_items'] = []
                 data['status'] = 'sign'
-                for item in sign_items:
-                    i = {}
-                    sign_info = item.text_content()
-                    m = re.search(r'Ф.И.О: ([\w -]+)\(', sign_info)
-                    if m:
-                        i['sign_specialist_name'] = m.group(1)
-                    m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
-                    if m:
-                        i['sign_specialist_role'] = m.group(1)
-                    m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
-                    if m:
-                        i['sign_date'] = m.group(1)
-                        i['sign_time'] = m.group(2)
-                    l = item.xpath('./a[contains(text(), "Отменить запись")]')
-                    l = l[0].xpath('@href')
-                    if l:
-                        m = re.search(r'obj=(\d+)&', l[0])
-                        if m:
-                            i['obj'] = m.group(1)
-                        m = re.search(r'kw=(\d+)&', l[0])
-                        if m:
-                            i['id'] = m.group(1)
-                        m = re.search(r'd=(\d+)&', l[0])
-                        if m:
-                            i['date'] = m.group(1)
-                        m = re.search(r't=([\d]{2}:[\d]{2})', l[0])
-                        if m:
-                            i['time'] = m.group(1)
-
-                    data['sign_items'].append(i)
-
+                data['sign_items'] = get_sign_items(sign_items)
                 self.request.session['sign_items'] = data['sign_items']
                 print('readdy items -- ', data['sign_items'])
             print('555555555555555555')
@@ -487,37 +429,9 @@ class SignOutFormView(FormView):
             sign_items = doc.xpath('//*[contains(text(), "Отменить запись")]/..')
             data['sign_items'] = []
             if sign_items:
-                for item in sign_items:
-                    i = {}
-                    sign_info = item.text_content()
-                    m = re.search(r'Ф.И.О: ([\w -]+)\(', sign_info)
-                    if m:
-                        i['sign_specialist_name'] = m.group(1)
-                    m = re.search(r'Специальность:\s*([\w .-]+)\s*Ф.И.О', sign_info)
-                    if m:
-                        i['sign_specialist_role'] = m.group(1)
-                    m = re.search(r'Дата:\s*([0-9]{1,2}.[0-9]{1,2}.[0-9]{4}) ([0-9]{1,2}:[0-9]{2})', sign_info)
-                    if m:
-                        i['sign_date'] = m.group(1)
-                        i['sign_time'] = m.group(2)
-                    l = item.xpath('./a[contains(text(), "Отменить запись")]')
-                    l = l[0].xpath('@href')
-                    if l:
-                        m = re.search(r'obj=(\d+)&', l[0])
-                        if m:
-                            i['obj'] = m.group(1)
-                        m = re.search(r'kw=(\d+)&', l[0])
-                        if m:
-                            i['id'] = m.group(1)
-                        m = re.search(r'd=(\d+)&', l[0])
-                        if m:
-                            i['date'] = m.group(1)
-                        m = re.search(r't=([\d]{2}:[\d]{2})', l[0])
-                        if m:
-                            i['time'] = m.group(1)
-
-                    data['sign_items'].append(i)
+                data['sign_items'] = get_sign_items(sign_items)
             self.request.session['sign_items'] = data['sign_items']
+
             return JsonResponse(data, status=200, safe=False)
         else:
             data['status'] = 'error'

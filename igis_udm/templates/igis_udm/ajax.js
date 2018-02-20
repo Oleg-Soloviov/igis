@@ -292,6 +292,7 @@ function show_schedule_time(parent_li, myPersonsObj, button) {
 function sign_person_in() {
     var xhttp = new XMLHttpRequest();
     var auth_form = document.forms['login'];
+    var zapisi = document.getElementById('zapisi');
     var overlay = document.getElementById('signin_modal_container');
     var overlay_content = document.getElementById('signin_modal_content');
     var overlay_error_container = document.getElementById('signin_error_container');
@@ -303,8 +304,9 @@ function sign_person_in() {
         dObj = myObj; // for debug
         overlay.style.cursor = 'auto';
         if ((myObj.status == 'sign') && myObj.sign_items){
-            update_zapisy(myObj.sign_items)
+            update_zapisy(myObj.sign_items);
             overlay.style.display = 'none';
+            zapisi.scrollIntoView({behavior: "smooth"});
             // очистим last_alarm
             document.getElementById('signin_fio').innerHTML = '';
             document.getElementById('signin_speciality').innerHTML = '';
