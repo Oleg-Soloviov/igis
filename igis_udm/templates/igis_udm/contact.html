@@ -2,29 +2,43 @@
 {% load staticfiles %}
 
 {% block title %}Отправьте письмо с Вашими пожеланиями, замечаниями и предлжениями{% endblock %}
+{% block meta_keywords %}{{ hospital.name }}, запись к врачу.{% endblock %}
+{% block meta_description %}Удмуртия. {{ hospital.name }}. Запись на прием к врачу.{% endblock meta_description %}
+
+{% block header_custom_css %}
+<style>
+{% include 'igis_udm/my_css.css' %}
+</style>
+{% endblock %}
+
+
 
 {% block page_container %}
-    <div class="row" id="main">
-        <div class="col-md-6 col-md-offset-3">
-            <br />
-            <div class="panel panel-default">
-                <div class="panel-body item_panel">
-                    <h3 style="text-align:center">Чтобы послать письмо, заполните форму</h3>
-                    <form id="contact_form" action="{% url 'contacts' %}" method="post" autocomplete="off" novalidate="">
-                        {% csrf_token %}
-                        <div class="form-group">
-                        {{ form }}
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-block" type="submit">Отправить</button>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-block" type="reset">Очистить</button>
-                        </div>
-                    </form>
-                  </div>
-                </div>
-            </div>
-        </div><!-- col-md-12 -->
-    </div><!-- row -->
+
+<div class="w3-row">
+    <div class="w3-card-4 w3-content" style="max-width:600px;">
+        <div class="w3-container w3-teal">
+            <h2>Чтобы послать письмо, заполните форму</h2>
+        </div>
+        <form class="w3-container" action="{% url 'contacts' %}" method="post" autocomplete="off" novalidate="">
+            {% csrf_token %}
+            <p>
+                <label for="{{ form.email.id_for_label }}" class="w3-text-teal"><b>Адрес</b></label>
+                <input class="w3-input w3-border w3-theme-l5" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" type="text" placeholder="Ваш email адрес">
+            </p>
+            <p>
+                <label for="{{ form.subject.id_for_label }}" class="w3-text-teal"><b>Тема</b></label>
+                <input class="w3-input w3-border w3-theme-l5" id="{{ form.subject.id_for_label }}" name="{{ form.subject.html_name }}" type="text" placeholder="Тема письма">
+            </p>
+            <p>
+                <label for="{{ form.message.id_for_label }}" class="w3-text-teal"><b>Письмо</b></label>
+                <textarea class="w3-input w3-border w3-theme-l5" id="{{ form.message.id_for_label }}" name="{{ form.message.html_name }}" style="resize:none;"></textarea>
+            </p>
+            <p>
+                <button class="w3-btn w3-teal" type="submit">Отправить</button>
+            </p>
+        </form>
+    </div>
+</div>
+
 {% endblock page_container %}

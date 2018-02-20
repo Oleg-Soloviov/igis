@@ -36,9 +36,9 @@ class SignOutForm(forms.Form):
 
 
 class ContactForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email..', }))
-    subject = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Subject..', }))
-    message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Message...'}))
+    email = forms.EmailField()
+    subject = forms.CharField()
+    message = forms.CharField(widget=forms.Textarea())
 
     def send_email(self):
         send_mail(
