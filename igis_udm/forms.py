@@ -1,4 +1,5 @@
 from django import forms
+from django.core.mail import send_mail
 
 
 class LoginForm(forms.Form):
@@ -32,3 +33,16 @@ class SignOutForm(forms.Form):
     specialist_id = forms.RegexField(regex=r'^[0-9]+$')
     date = forms.RegexField(regex=r'^[0-9]{6,8}$')
     time = forms.RegexField(regex=r'^[0-9]{2}:[0-9]{2}$')
+
+
+class ContactForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email..', }))
+    subject = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Subject..', }))
+    message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Message...'}))
+
+    def send_email(self):
+        send_mail(
+            self.cleaned_data['subject'],
+            self.cleaned_data['message'],
+            self.cleaned_data['email'] + " <postmaster@sandbox075b55521f59465c82d4d87856d6f43c.mailgun.org>",
+            ["osoloviov@list.ru"], )

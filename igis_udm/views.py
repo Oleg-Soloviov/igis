@@ -11,6 +11,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.core.cache import cache
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, FormView, View
 from .forms import *
 from .models import Place, Hospital
@@ -442,3 +443,13 @@ class SignOutFormView(FormView):
         data = {}
         data['status'] = 'error'
         return JsonResponse(data, status=200, safe=False)
+
+
+class ContactView(FormView):
+    template_name = 'igis_udm/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('igis_udm:contacts')
+
+    def form_valid(self, form):
+        form.send_email()
+        return super(ContactView, self).form_valid(form)

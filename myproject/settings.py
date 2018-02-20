@@ -143,7 +143,7 @@ ADMINS = [('Oleg', 'osoloviov@list.ru'),]
 # EMAIL_HOST_PASSWORD = "Google_che_che_che_152102"
 # EMAIL_USE_TLS = True
 
-EMAIL_BACKEND = 'myproject.my_email.MailgunEmailBackend'
+EMAIL_BACKEND = 'myproject.my_mail_backends.MailgunEmailBackend'
 
 MY_REQUESTS_CONNECT_TIMEOUT = 8
 MY_REQUESTS_READ_TIMEOUT = 25
