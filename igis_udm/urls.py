@@ -13,6 +13,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': {'Place': PlaceSitemap, 'Hospital': HospitalSitemap}},
          name='django.contrib.sitemaps.views.sitemap'),
     path(r'contacts/', ContactView.as_view(), name='contacts'),
+    path(r'contacts/success/', ContactSuccessView.as_view(), name='contacts_success'),
     re_path(r'^(?P<slug>\w+)/$', PlaceDetailView.as_view(), name='place'),
     re_path(r'^$', PlaceListView.as_view(), name='place_list'),
 ]

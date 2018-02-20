@@ -1,0 +1,33 @@
+{% extends 'igis_udm/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Отправьте письмо с Вашими пожеланиями, замечаниями и предлжениями{% endblock %}
+{% block meta_keywords %}{{ hospital.name }}, запись к врачу.{% endblock %}
+{% block meta_description %}Удмуртия. {{ hospital.name }}. Запись на прием к врачу.{% endblock meta_description %}
+
+{% block header_custom_css %}
+<style>
+{% include 'igis_udm/my_css.css' %}
+</style>
+{% endblock %}
+
+
+
+{% block page_container %}
+
+<div class="w3-row">
+    <div class="w3-card-4 w3-content" style="max-width:600px;">
+        <div class="w3-container w3-teal">
+            <h2>Письмо отправлено.</h2>
+            <p>
+                Спасибо за обращение. Если это будет возможно и необходимо мы постараемся ответить.
+            </p>
+            <hr>
+            <p>
+                <a href="{% url 'place_list' %}">Выбрать город или район Удмуртии.</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock page_container %}

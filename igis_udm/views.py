@@ -448,10 +448,12 @@ class SignOutFormView(FormView):
 class ContactView(FormView):
     template_name = 'igis_udm/contact.html'
     form_class = ContactForm
-    success_url = reverse_lazy('contacts')
+    success_url = reverse_lazy('contacts_success')
 
     def form_valid(self, form):
         form.send_email()
         return super(ContactView, self).form_valid(form)
 
 
+class ContactSuccessView(TemplateView):
+    template_name = 'igis_udm/contact_success.html'

@@ -41,8 +41,10 @@ class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea())
 
     def send_email(self):
+        message = '<IGIS_UDM> from {} \n\n {} '.format(self.cleaned_data['email'],
+                                                            self.cleaned_data['message'])
         send_mail(
             self.cleaned_data['subject'],
-            self.cleaned_data['message'],
-            self.cleaned_data['email'] + " <postmaster@sandbox075b55521f59465c82d4d87856d6f43c.mailgun.org>",
-            ["osoloviov@list.ru"], )
+            message,
+             "<postmaster@sandbox075b55521f59465c82d4d87856d6f43c.mailgun.org>",
+            ["osoloviov@list.ru"])
