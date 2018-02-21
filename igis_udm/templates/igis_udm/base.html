@@ -5,11 +5,11 @@
   {% if not debug %}
   {% include 'igis_udm/google_analitics.html' %}
   {% endif %}
-  <title>{% block title %}Удмуртия. Запись на прием к врачу через интернет.{% endblock title %}</title>
+  <title>{% block title %}Удмуртия. Запись на прием к врачу.{% endblock title %}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="keywords" content="{% block meta_keywords %}Удмуртия, запись к врачу, интернет{% endblock %}">
-  <meta name="description" content="{% block meta_description %}Удмуртия. Запись на прием к врачу через интернет.{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}Удмуртия, запись на прием к врачу{% endblock %}">
+  <meta name="description" content="{% block meta_description %}Удмуртия. Запись на прием к врачу.{% endblock %}">
   <link rel="stylesheet" href="{% static 'css/w3.css' %}">
   {% block header_custom_css %}{% endblock %}
   {% block header_custom_js %}{% endblock %}
@@ -28,9 +28,9 @@
   <p>
     <a href="{% url 'contacts' %}" target="_blank">Контакты</a>
   </p>
-  <p>Powered by
+  <p>Работает на
     <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" rel="external">w3.css</a>
-    and
+    и
     <a href="https://www.djangoproject.com/" target="_blank" rel="external">Django</a>
   </p>
 </footer>

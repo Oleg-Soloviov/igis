@@ -1,8 +1,8 @@
 {% extends "igis_udm/base.html" %}
 
-{% block title %}{{ hospital.name }}. Запись к врачу.{% endblock title %}
-{% block meta_keywords %}{{ hospital.name }}, запись к врачу.{% endblock %}
-{% block meta_description %}Удмуртия. {{ hospital.name }}. Запись на прием к врачу.{% endblock meta_description %}
+{% block title %}Удмуртия. {{ hospital.place.name }}. {{ hospital.name }}. Запись к врачу.{% endblock title %}
+{% block meta_keywords %}Удмуртия, {{ hospital.place.name }}, {{ hospital.name }}, запись к врачу.{% endblock %}
+{% block meta_description %}Удмуртия. {{ hospital.place.name }}. {{ hospital.name }}. Запись на прием к врачу.{% endblock meta_description %}
 
 {% block header_custom_css %}
 <style>

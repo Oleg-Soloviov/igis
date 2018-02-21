@@ -65,7 +65,6 @@ class HospitalDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(HospitalDetailView, self).get_context_data(**kwargs)
         self.request.session['igis_obj_id'] = self.object.igis_obj
-        # medical_cookie = 'medical__{}'.format(self.object.igis_obj)
         persons = []
         context['login_form'] = LoginForm()
         context['place_list'] = Place.objects.all()
