@@ -57,7 +57,7 @@
                                                                                                </span>
                                                                                               {% endfor %}
                                                                                               {% endif %}</label>
-                <textarea class="w3-input w3-border w3-theme-l5" id="{{ form.message.id_for_label }}" name="{{ form.message.html_name }}" style="resize:none;{% if form.message.errors %}border-color:red !important;{% endif %}">{{ form.message.value|default_if_none:'' }}</textarea>
+                <textarea class="w3-input w3-border w3-theme-l5" id="{{ form.message.id_for_label }}" name="{{ form.message.html_name }}" style="resize:none;{% if form.message.errors %}border-color:red !important;{% endif %}" required>{{ form.message.value|default_if_none:'' }}</textarea>
             </p>
             <p>
                 <button class="w3-btn w3-teal" type="submit">Отправить</button>

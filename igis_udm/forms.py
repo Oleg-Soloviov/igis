@@ -36,15 +36,18 @@ class SignOutForm(forms.Form):
 
 
 class ContactForm(forms.Form):
-    email = forms.EmailField()
-    subject = forms.CharField()
+    email = forms.EmailField(required=False)
+    subject = forms.CharField(required=False)
     message = forms.CharField(widget=forms.Textarea())
 
     def send_email(self):
-        message = '<IGIS_UDM> from {} \n\n {} '.format(self.cleaned_data['email'],
-                                                            self.cleaned_data['message'])
+        subject = 'from IGIS_UDM: {}'.format(self.cleaned_data['subject'])
+        if self.cleaned_data['email']:
+            message = 'from {}\n\n {}'.format(self.cleaned_data['email'], self.cleaned_data['message'])
+        else:
+            message = self.cleaned_data['message']
         send_mail(
-            self.cleaned_data['subject'],
+            subject,
             message,
              "<postmaster@sandbox075b55521f59465c82d4d87856d6f43c.mailgun.org>",
             ["osoloviov@list.ru"])
