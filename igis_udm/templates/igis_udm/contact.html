@@ -37,7 +37,7 @@
                                                                                                </span>
                                                                                               {% endfor %}
                                                                                               {% endif %}</label>
-                <input class="w3-input w3-border w3-theme-l5" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" value="{{ form.email.value }}" type="text" placeholder="Ваш email адрес"{% if form.email.errors %} style="border-color:red !important;"{% endif %}>
+                <input class="w3-input w3-border w3-theme-l5" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" value="{{ form.email.value|default_if_none:'' }}" type="text" placeholder="Ваш email адрес"{% if form.email.errors %} style="border-color:red !important;"{% endif %}>
             </p>
             <p>
                 <label for="{{ form.subject.id_for_label }}" class="w3-text-teal"><b>Тема: </b>{% if form.subject.errors %}
@@ -47,7 +47,7 @@
                                                                                                </span>
                                                                                               {% endfor %}
                                                                                               {% endif %}</label>
-                <input class="w3-input w3-border w3-theme-l5" id="{{ form.subject.id_for_label }}" name="{{ form.subject.html_name }}" value="{{ form.subject.value }}" type="text" placeholder="Тема письма"{% if form.subject.errors %} style="border-color:red !important;"{% endif %}>
+                <input class="w3-input w3-border w3-theme-l5" id="{{ form.subject.id_for_label }}" name="{{ form.subject.html_name }}" value="{{ form.subject.value|default_if_none:'' }}" type="text" placeholder="Тема письма"{% if form.subject.errors %} style="border-color:red !important;"{% endif %}>
             </p>
             <p>
                 <label for="{{ form.message.id_for_label }}" class="w3-text-teal"><b>Письмо: </b>{% if form.message.errors %}
@@ -57,7 +57,7 @@
                                                                                                </span>
                                                                                               {% endfor %}
                                                                                               {% endif %}</label>
-                <textarea class="w3-input w3-border w3-theme-l5" id="{{ form.message.id_for_label }}" name="{{ form.message.html_name }}" style="resize:none;{% if form.message.errors %}border-color:red !important;{% endif %}">{{ form.message.value }}</textarea>
+                <textarea class="w3-input w3-border w3-theme-l5" id="{{ form.message.id_for_label }}" name="{{ form.message.html_name }}" style="resize:none;{% if form.message.errors %}border-color:red !important;{% endif %}">{{ form.message.value|default_if_none:'' }}</textarea>
             </p>
             <p>
                 <button class="w3-btn w3-teal" type="submit">Отправить</button>
