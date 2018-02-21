@@ -2,6 +2,7 @@
 #person_list > .person_item:nth-child(odd) {color:#fff !important; background-color:#004d4d !important}  /*d5*/
 #error_list {display:none;}
 #filter_input {background-color:#007373;color:#fff !important}
+.form_error {color:red; font-size:small;}
 
 .w3-theme-l5 {color:#000 !important; background-color:#e8ffff !important}
 .w3-theme-l4 {color:#000 !important; background-color:#b3ffff !important}
