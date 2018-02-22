@@ -293,6 +293,27 @@
     </div>
 
 </div>
+<div id="no_connect_modal_container" class="w3-modal">
+    <div id="no_connect_modal_content" class="w3-modal-content w3-card-4 w3-animate-zoom w3-round-xlarge w3-red w3-border-lightgrey w3-border" style="max-width:600px">
+        <div class="w3-container w3-cell-row  w3-center">
+            <h3 class="w3-cell-row w3-padding-16">
+                Сервер больницы не отвечает!
+            </h3>
+            <p>
+                Попробуйте еще раз прямо сейчас или чуть позже.
+            </p>
+        </div>
+        <div class="w3-cell-row" style="cursor:pointer;">
+            <a href="#"
+               onclick="document.getElementById('no_connect_modal_container').style.display = 'none'"
+               class="w3-cell w3-cell-middle w3-hover-yellow w3-border-lightgrey w3-border-top w3-border-right w3-center w3-padding-16"
+                 style="border-bottom-right-radius: 16px;border-bottom-left-radius: 16px;text-decoration:none;">
+                ЗАКРЫТЬ
+            </a>
+        </div>
+    </div>
+
+</div>
 {% endblock page_container %}
 
 {% block bottom_custom_js %}

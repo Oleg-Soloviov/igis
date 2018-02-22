@@ -23,6 +23,11 @@ function show_auth_form(){
     modal.style.display = 'block';
 }
 
+function show_no_connect_alarm(){
+    var modal = document.getElementById('no_connect_modal_container');
+    modal.style.display = 'block';
+}
+
 function closeAuthForm(){
     var modal = document.getElementById('modal_auth');
     var auth_form = document.forms['login'];
