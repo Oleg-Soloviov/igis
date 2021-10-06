@@ -24,7 +24,7 @@ pyOpenSSL
 pytz==2017.2
 queuelib==1.4.2
 requests
-Scrapy==1.4.0
+Scrapy==1.8.1
 service-identity==17.0.0
 six==1.10.0
 sqlparse==0.2.3
