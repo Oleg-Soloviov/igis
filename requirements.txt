@@ -29,7 +29,7 @@ service-identity==17.0.0
 six==1.10.0
 sqlparse==0.2.3
 transliterate==1.10
-Twisted==17.5.0
+Twisted==22.2.0
 urllib3
 w3lib==1.18.0
 zope.interface==4.4.2
